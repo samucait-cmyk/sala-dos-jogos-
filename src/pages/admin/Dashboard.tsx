@@ -1,40 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AdminLayout } from '../../components/adminLayout/AdminLayout';
+import { usePosts } from '../../context/PostContext';
 
 export const Dashboard: React.FC = () => {
-  const [posts, setPosts] = useState<any[]>([]);
+  const { posts, deletePost } = usePosts();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
   const [activeTab, setActiveTab] = useState<'posts' | 'moderation'>('posts');
   const [reportedComments, setReportedComments] = useState<any[]>([]);
   const navigate = useNavigate();
 
-  // Carrega posts e denúncias de forma segura diretamente do localStorage para evitar crash de contexto
   useEffect(() => {
     document.title = 'Sala dos Jogos | Painel Administrativo';
     try {
-      const savedPosts = JSON.parse(localStorage.getItem('@nexus_posts') || '[]');
-      setPosts(Array.isArray(savedPosts) ? savedPosts : []);
-
       const reports = JSON.parse(localStorage.getItem('@nexus_reported_comments') || '[]');
       setReportedComments(Array.isArray(reports) ? reports : []);
     } catch (e) {
-      console.error('Erro ao ler dados do localStorage:', e);
-      setPosts([]);
+      console.error('Erro ao ler denúncias do localStorage:', e);
       setReportedComments([]);
     }
   }, [activeTab]);
 
-  const handleDeletePost = (postId: string, postTitle: string) => {
-    if (!window.confirm(`Tem a certeza absoluta de que deseja eliminar "${postTitle}"?`)) return;
-    try {
-      const updatedPosts = posts.filter(p => p.id !== postId);
-      setPosts(updatedPosts);
-      localStorage.setItem('@nexus_posts', JSON.stringify(updatedPosts));
-    } catch (e) {
-      console.error('Erro ao eliminar post:', e);
-    }
+  const handleDeletePost = async (postId: string, postTitle: string) => {
+    if (!window.confirm(`Tem a certeza absoluta de que deseja eliminar "${postTitle}" da nuvem?`)) return;
+    await deletePost(postId);
   };
 
   const filteredPosts = posts.filter((post) => {
@@ -97,7 +87,7 @@ export const Dashboard: React.FC = () => {
         <div>
           <h1 style={{ fontSize: '1.8rem', margin: 0, color: '#fff' }}>Sala dos Jogos Admin</h1>
           <p style={{ color: '#94a3b8', marginTop: '0.25rem', fontSize: '0.9rem' }}>
-            Gerencie matérias, notícias e a moderação de comentários da comunidade.
+            Gerencie matérias, notícias e a moderação de comentários da comunidade (Sincronizado com o Supabase).
           </p>
         </div>
         <Link
@@ -291,7 +281,7 @@ export const Dashboard: React.FC = () => {
                 ) : (
                   <tr>
                     <td colSpan={4} style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>
-                      Nenhuma matéria encontrada com os filtros selecionados.
+                      Nenhuma matéria encontrada na nuvem. Crie uma nova matéria para começar!
                     </td>
                   </tr>
                 )}
