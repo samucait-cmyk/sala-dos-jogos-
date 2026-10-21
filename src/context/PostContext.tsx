@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Post } from '../types/game';
-import { supabase } from '../supabaseClient.ts';
+import { supabase } from '../supabaseClient';
 
 interface PostContextType {
   posts: Post[];
@@ -59,6 +59,8 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const addPost = async (newPost: Post) => {
+    console.log("A tentar enviar para o Supabase...", newPost);
+    
     const postToAdd = {
       title: newPost.title,
       subtitle: newPost.subtitle || '',
@@ -68,31 +70,36 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
       category: normalizeCategory(newPost)
     };
 
-    const { data, error } = await supabase
-      .from('posts')
-      .insert([postToAdd])
-      .select();
+    try {
+      const { data, error } = await supabase
+        .from('posts')
+        .insert([postToAdd])
+        .select();
 
-    if (error) {
-      console.error('Erro ao inserir post no Supabase:', error);
-      alert('Erro do Supabase ao salvar: ' + error.message);
-      return;
-    }
+      if (error) {
+        console.error('Erro retornado pelo Supabase:', error);
+        alert('Erro do Supabase: ' + error.message);
+        return;
+      }
 
-    if (data && data[0]) {
-      const created: Post = {
-        id: String(data[0].id),
-        title: data[0].title,
-        subtitle: data[0].subtitle || '',
-        summary: data[0].summary || '',
-        content: data[0].content,
-        imageUrl: data[0].image || '',
-        category: normalizeCategory({ category: data[0].category }),
-        author: 'Redação Nexus',
-        date: '19 de outubro de 2026'
-      };
-      setPosts((prev) => [created, ...prev]);
-      alert('Matéria publicada e salva na nuvem com sucesso!');
+      if (data && data[0]) {
+        const created: Post = {
+          id: String(data[0].id),
+          title: data[0].title,
+          subtitle: data[0].subtitle || '',
+          summary: data[0].summary || '',
+          content: data[0].content,
+          imageUrl: data[0].image || '',
+          category: normalizeCategory({ category: data[0].category }),
+          author: 'Redação Nexus',
+          date: '19 de outubro de 2026'
+        };
+        setPosts((prev) => [created, ...prev]);
+        alert('Matéria publicada e salva na nuvem com sucesso!');
+      }
+    } catch (err: any) {
+      console.error('Falha de rede ao comunicar com o Supabase:', err);
+      alert('Erro de conexão crítico: ' + (err.message || 'Falha ao contactar o servidor.'));
     }
   };
 
