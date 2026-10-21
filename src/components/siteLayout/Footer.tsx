@@ -4,8 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 export const Footer: React.FC = () => {
   const navigate = useNavigate();
 
-  // Lê o e-mail administrativo configurado no .env.local (com fallback caso não esteja definido)
-  const adminEmail = import.meta.env.VITE_ADMIN_EMAIL || 'contato_nexusgaming@protonmail.com';
+  // E-mail oficial e definitivo da Sala dos Jogos
+  const adminEmail = 'contato_saladosjogos@protonmail.com';
 
   // Atalho Secreto de Teclado (Ctrl + Alt + A) para abrir o Login Admin
   useEffect(() => {
@@ -25,7 +25,7 @@ export const Footer: React.FC = () => {
       backgroundColor: '#0b1120',
       borderTop: '1px solid #1e293b',
       color: '#64748b',
-      padding: '2.5rem 1rem 1.5rem 1rem',
+      padding: '2.5rem 1.5rem 1.5rem 1.5rem',
       marginTop: 'auto'
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'center' }}>
@@ -37,7 +37,7 @@ export const Footer: React.FC = () => {
           <Link to="/guias" style={{ color: '#94a3b8', textDecoration: 'none' }}>Guias</Link>
         </div>
 
-        {/* E-mail de Contato do Admin / Suporte */}
+        {/* E-mail de Contato Oficial */}
         <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
           <span>Contato: </span>
           <a

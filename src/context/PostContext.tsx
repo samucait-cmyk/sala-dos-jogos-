@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Post } from '../types/game';
+import { supabase } from '../supabaseClient.ts';
 
 interface PostContextType {
   posts: Post[];
-  addPost: (post: Post) => void;
-  updatePost: (post: Post) => void;
-  deletePost: (id: string) => boolean;
+  addPost: (post: Post) => Promise<void>;
+  updatePost: (post: Post) => Promise<void>;
+  deletePost: (id: string) => Promise<boolean>;
   getPostById: (id: string) => Post | undefined;
 }
 
@@ -97,73 +98,112 @@ const DEFAULT_POSTS: Post[] = [
 ];
 
 export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [posts, setPosts] = useState<Post[]>(() => {
-    const saved = localStorage.getItem('@nexus_posts');
-    let userPosts: Post[] = [];
+  const [posts, setPosts] = useState<Post[]>(DEFAULT_POSTS);
 
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed && Array.isArray(parsed)) {
-          userPosts = parsed;
-        }
-      } catch (e) {
-        // Ignora erro
+  useEffect(() => {
+    async function fetchPostsFromSupabase() {
+      const { data, error } = await supabase.from('posts').select('*');
+      
+      if (error) {
+        console.error('Erro ao buscar posts do Supabase:', error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        const mappedPosts: Post[] = data.map((item: any) => ({
+          id: String(item.id),
+          title: item.title,
+          subtitle: item.subtitle,
+          summary: item.summary,
+          content: item.content,
+          imageUrl: item.image,
+          category: normalizeCategory(item),
+          author: 'Redação Nexus',
+          date: '19 de outubro de 2026'
+        }));
+
+        const map = new Map<string, Post>();
+        mappedPosts.forEach(p => map.set(p.id, p));
+        DEFAULT_POSTS.forEach(p => {
+          if (!map.has(p.id)) map.set(p.id, p);
+        });
+
+        setPosts(Array.from(map.values()));
       }
     }
 
-    const map = new Map<string, Post>();
+    fetchPostsFromSupabase();
+  }, []);
 
-    userPosts.forEach((p) => {
-      if (p && p.id) {
-        map.set(String(p.id), {
-          ...p,
-          category: normalizeCategory(p)
-        });
-      }
-    });
-
-    DEFAULT_POSTS.forEach((p) => {
-      if (p && p.id && !map.has(String(p.id))) {
-        map.set(String(p.id), {
-          ...p,
-          category: normalizeCategory(p)
-        });
-      }
-    });
-
-    return Array.from(map.values()) as Post[];
-  });
-
-  useEffect(() => {
-    const normalizedPosts = posts.map((p) => ({
-      ...p,
-      category: normalizeCategory(p)
-    }));
-    localStorage.setItem('@nexus_posts', JSON.stringify(normalizedPosts));
-  }, [posts]);
-
-  const addPost = (newPost: Post) => {
+  const addPost = async (newPost: Post) => {
     const postToAdd = {
-      ...newPost,
-      id: newPost.id || String(Date.now()),
+      title: newPost.title,
+      subtitle: newPost.subtitle || '',
+      summary: newPost.summary,
+      content: newPost.content,
+      image: newPost.imageUrl || '',
       category: normalizeCategory(newPost)
     };
-    setPosts((prev) => [postToAdd, ...prev]);
+
+    const { data, error } = await supabase
+      .from('posts')
+      .insert([postToAdd])
+      .select();
+
+    if (error) {
+      console.error('Erro ao inserir post no Supabase:', error);
+      return;
+    }
+
+    if (data && data[0]) {
+      const created: Post = {
+        id: String(data[0].id),
+        title: data[0].title,
+        subtitle: data[0].subtitle,
+        summary: data[0].summary,
+        content: data[0].content,
+        imageUrl: data[0].image,
+        category: normalizeCategory(data[0]),
+        author: 'Redação Nexus',
+        date: '19 de outubro de 2026'
+      };
+      setPosts((prev) => [created, ...prev]);
+    }
   };
 
-  const updatePost = (updatedPost: Post) => {
+  const updatePost = async (updatedPost: Post) => {
     const postToUpdate = {
-      ...updatedPost,
+      title: updatedPost.title,
+      subtitle: updatedPost.subtitle || '',
+      summary: updatedPost.summary,
+      content: updatedPost.content,
+      image: updatedPost.imageUrl || '',
       category: normalizeCategory(updatedPost)
     };
-    setPosts((prev) => prev.map((p) => (p.id === postToUpdate.id ? postToUpdate : p)));
+
+    const { error } = await supabase
+      .from('posts')
+      .update(postToUpdate)
+      .eq('id', updatedPost.id);
+
+    if (error) {
+      console.error('Erro ao atualizar post no Supabase:', error);
+      return;
+    }
+
+    setPosts((prev) => prev.map((p) => (p.id === updatedPost.id ? updatedPost : p)));
   };
 
-  // Exclusão blindada: exige confirmação lógica e impede que posts padrão essenciais sumam por código
-  const deletePost = (id: string): boolean => {
-    const target = posts.find(p => p.id === id);
-    if (!target) return false;
+  const deletePost = async (id: string): Promise<boolean> => {
+    const { error } = await supabase
+      .from('posts')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Erro ao apagar post no Supabase:', error);
+      return false;
+    }
 
     setPosts((prev) => prev.filter((p) => p.id !== id));
     return true;
