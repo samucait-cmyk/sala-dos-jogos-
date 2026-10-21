@@ -13,16 +13,8 @@ interface PostContextType {
 const PostContext = createContext<PostContextType | undefined>(undefined);
 
 const normalizeCategory = (post: { id?: string; category?: string; benchmark?: any }): any => {
-  const id = String(post.id || '');
-  
-  if (id === '1' || id === '2' || id === '3') {
-    return 'Review';
-  }
-  if (id === '4' || id === '5') {
-    return 'Notícia';
-  }
-
   const cat = (post.category || '').toLowerCase().trim();
+  
   if (cat.includes('review') || cat.includes('análise') || cat.includes('analise') || Boolean(post.benchmark)) {
     return 'Review';
   }
@@ -123,10 +115,9 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }));
 
         const map = new Map<string, Post>();
+        // Prioriza os posts do Supabase sobre os mocks se houver IDs duplicados, mas mantém os mocks caso não estejam na BD
+        DEFAULT_POSTS.forEach(p => map.set(p.id, p));
         mappedPosts.forEach(p => map.set(p.id, p));
-        DEFAULT_POSTS.forEach(p => {
-          if (!map.has(p.id)) map.set(p.id, p);
-        });
 
         setPosts(Array.from(map.values()));
       }
