@@ -39,12 +39,12 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data) {
         const mappedPosts: Post[] = data.map((item: any) => ({
           id: String(item.id),
-          title: item.Titulo || item.title,
+          title: item.title || '',
           subtitle: item.subtitle || '',
-          summary: item.summary || '',
-          content: item.Conteúdo || item.content,
-          imageUrl: item.Imagem || item.image,
-          category: normalizeCategory({ category: item.Categoria || item.category }),
+          summary: item.summary || item.subtitle || '',
+          content: item.content || '',
+          imageUrl: item.image || '',
+          category: normalizeCategory({ category: item.category }),
           author: 'Redação Nexus',
           date: '19 de outubro de 2026'
         }));
@@ -57,14 +57,13 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const addPost = async (newPost: Post) => {
-    // Mapeando para os nomes exatos das colunas da tabela do Supabase
     const postToAdd = {
-      Titulo: newPost.title,
+      title: newPost.title,
       subtitle: newPost.subtitle || '',
       summary: newPost.summary || '',
-      Conteúdo: newPost.content,
-      Imagem: newPost.imageUrl || '',
-      Categoria: normalizeCategory(newPost)
+      content: newPost.content,
+      image: newPost.imageUrl || '',
+      category: normalizeCategory(newPost)
     };
 
     const { data, error } = await supabase
@@ -74,18 +73,19 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (error) {
       console.error('Erro ao inserir post no Supabase:', error);
+      alert('Erro ao salvar no Supabase: ' + error.message);
       return;
     }
 
     if (data && data[0]) {
       const created: Post = {
         id: String(data[0].id),
-        title: data[0].Titulo || data[0].title,
+        title: data[0].title,
         subtitle: data[0].subtitle || '',
         summary: data[0].summary || '',
-        content: data[0].Conteúdo || data[0].content,
-        imageUrl: data[0].Imagem || data[0].image,
-        category: normalizeCategory({ category: data[0].Categoria || data[0].category }),
+        content: data[0].content,
+        imageUrl: data[0].image || '',
+        category: normalizeCategory({ category: data[0].category }),
         author: 'Redação Nexus',
         date: '19 de outubro de 2026'
       };
@@ -95,12 +95,12 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updatePost = async (updatedPost: Post) => {
     const postToUpdate = {
-      Titulo: updatedPost.title,
+      title: updatedPost.title,
       subtitle: updatedPost.subtitle || '',
       summary: updatedPost.summary || '',
-      Conteúdo: updatedPost.content,
-      Imagem: updatedPost.imageUrl || '',
-      Categoria: normalizeCategory(updatedPost)
+      content: updatedPost.content,
+      image: updatedPost.imageUrl || '',
+      category: normalizeCategory(updatedPost)
     };
 
     const { error } = await supabase
@@ -110,6 +110,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (error) {
       console.error('Erro ao atualizar post no Supabase:', error);
+      alert('Erro ao atualizar: ' + error.message);
       return;
     }
 
