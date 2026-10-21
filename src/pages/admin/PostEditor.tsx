@@ -73,7 +73,7 @@ export const PostEditor: React.FC = () => {
     insertFormatting(`<span style="font-family: ${font};">`, `</span>`, 'texto customizado');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const existingPost = isEditing && id ? getPostById(id) : undefined;
@@ -100,13 +100,18 @@ export const PostEditor: React.FC = () => {
       benchmark: existingPost?.benchmark
     };
 
-    if (isEditing && id) {
-      updatePost(postToSave);
-      setSaveFeedback(true);
-      setTimeout(() => setSaveFeedback(false), 3000);
-    } else {
-      addPost(postToSave);
-      navigate('/admin/dashboard');
+    try {
+      if (isEditing && id) {
+        await updatePost(postToSave);
+        setSaveFeedback(true);
+        setTimeout(() => setSaveFeedback(false), 3000);
+      } else {
+        await addPost(postToSave);
+        navigate('/admin/dashboard');
+      }
+    } catch (error) {
+      console.error('Erro ao salvar post:', error);
+      alert('Erro ao salvar a matéria. Verifique o console.');
     }
   };
 
@@ -504,7 +509,7 @@ export const PostEditor: React.FC = () => {
                 <span style={{ width: '1px', background: '#475569', margin: '0 4px', height: '22px' }} />
                 
                 <button type="button" onClick={() => insertFormatting('> ', '', 'Citação em destaque')} title="Citação" style={{ background: '#334155', color: '#fff', border: 'none', padding: '0.45rem 0.8rem', borderRadius: '6px', cursor: 'pointer' }}>“ ” Citação</button>
-                <button type="button" onClick={() => insertFormatting('\n- ', '', 'Item da lista')} title="Lista" style={{ background: '#334155', color: '#fff', border: 'none', padding: '0.45rem 0.8rem', borderRadius: '6px', cursor: 'pointer' }}>• Lista</button>
+                <button type="button" onClick={() => insertFormatting('\n- ', '', 'Item da lista')} title="Lista" style={{ background: '#334155', color: '#fff', border: 'none', padding: '0.45rem 0.8rem', borderRadius: '6px', cursor: 'pointer' }}>Lista</button>
                 <button type="button" onClick={() => insertFormatting('![Legenda da Imagem](https://)', '', '')} title="Inserir Imagem" style={{ background: '#334155', color: '#38bdf8', border: 'none', padding: '0.45rem 0.8rem', borderRadius: '6px', cursor: 'pointer' }}>🖼️ Imagem</button>
               </div>
 
