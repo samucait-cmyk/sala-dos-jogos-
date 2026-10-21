@@ -25,43 +25,33 @@ const normalizeCategory = (post: { id?: string; category?: string; benchmark?: a
 };
 
 export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [posts, setPosts] = useState<Post[]>(() => {
-    // Carrega do localStorage caso haja cache prévio
-    const saved = localStorage.getItem('@sala_jogos_posts');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [posts, setPosts] = useState<Post[]>([]);
 
-  useEffect(() => {
-    localStorage.setItem('@sala_jogos_posts', JSON.stringify(posts));
-  }, [posts]);
-
+  // Buscar posts diretamente do Supabase ao carregar
   useEffect(() => {
     async function fetchPostsFromSupabase() {
-      try {
-        const { data, error } = await supabase.from('posts').select('*');
-        
-        if (error) {
-          console.warn('Aviso do Supabase (usando dados locais):', error.message);
-          return;
-        }
+      const { data, error } = await supabase.from('posts').select('*');
+      
+      if (error) {
+        console.error('Erro ao buscar posts do Supabase:', error);
+        alert('Erro ao carregar do Supabase: ' + error.message);
+        return;
+      }
 
-        if (data && data.length > 0) {
-          const mappedPosts: Post[] = data.map((item: any) => ({
-            id: String(item.id),
-            title: item.title || '',
-            subtitle: item.subtitle || '',
-            summary: item.summary || item.subtitle || '',
-            content: item.content || '',
-            imageUrl: item.image || '',
-            category: normalizeCategory({ category: item.category }),
-            author: 'Redação Nexus',
-            date: '19 de outubro de 2026'
-          }));
+      if (data) {
+        const mappedPosts: Post[] = data.map((item: any) => ({
+          id: String(item.id),
+          title: item.title || '',
+          subtitle: item.subtitle || '',
+          summary: item.summary || item.subtitle || '',
+          content: item.content || '',
+          imageUrl: item.image || '',
+          category: normalizeCategory({ category: item.category }),
+          author: 'Redação Nexus',
+          date: '19 de outubro de 2026'
+        }));
 
-          setPosts(mappedPosts);
-        }
-      } catch (err) {
-        console.warn('Falha de rede ao conectar ao Supabase. Operando em modo local.');
+        setPosts(mappedPosts);
       }
     }
 
@@ -78,65 +68,68 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
       category: normalizeCategory(newPost)
     };
 
-    try {
-      const { data, error } = await supabase
-        .from('posts')
-        .insert([postToAdd])
-        .select();
+    const { data, error } = await supabase
+      .from('posts')
+      .insert([postToAdd])
+      .select();
 
-      if (!error && data && data[0]) {
-        const created: Post = {
-          id: String(data[0].id),
-          title: data[0].title,
-          subtitle: data[0].subtitle || '',
-          summary: data[0].summary || '',
-          content: data[0].content,
-          imageUrl: data[0].image || '',
-          category: normalizeCategory({ category: data[0].category }),
-          author: 'Redação Nexus',
-          date: '19 de outubro de 2026'
-        };
-        setPosts((prev) => [created, ...prev]);
-        return;
-      }
-    } catch (err) {
-      console.warn('Supabase indisponível, gravando localmente...');
+    if (error) {
+      console.error('Erro ao inserir post no Supabase:', error);
+      alert('Erro do Supabase ao salvar: ' + error.message);
+      return;
     }
 
-    // Fallback local garantindo que a matéria é publicada imediatamente na tela e no painel
-    setPosts((prev) => [newPost, ...prev]);
+    if (data && data[0]) {
+      const created: Post = {
+        id: String(data[0].id),
+        title: data[0].title,
+        subtitle: data[0].subtitle || '',
+        summary: data[0].summary || '',
+        content: data[0].content,
+        imageUrl: data[0].image || '',
+        category: normalizeCategory({ category: data[0].category }),
+        author: 'Redação Nexus',
+        date: '19 de outubro de 2026'
+      };
+      setPosts((prev) => [created, ...prev]);
+      alert('Matéria publicada e salva na nuvem com sucesso!');
+    }
   };
 
   const updatePost = async (updatedPost: Post) => {
-    try {
-      const postToUpdate = {
-        title: updatedPost.title,
-        subtitle: updatedPost.subtitle || '',
-        summary: updatedPost.summary || '',
-        content: updatedPost.content,
-        image: updatedPost.imageUrl || '',
-        category: normalizeCategory(updatedPost)
-      };
+    const postToUpdate = {
+      title: updatedPost.title,
+      subtitle: updatedPost.subtitle || '',
+      summary: updatedPost.summary || '',
+      content: updatedPost.content,
+      image: updatedPost.imageUrl || '',
+      category: normalizeCategory(updatedPost)
+    };
 
-      await supabase
-        .from('posts')
-        .update(postToUpdate)
-        .eq('id', updatedPost.id);
-    } catch (err) {
-      console.warn('Atualizando apenas no estado local.');
+    const { error } = await supabase
+      .from('posts')
+      .update(postToUpdate)
+      .eq('id', updatedPost.id);
+
+    if (error) {
+      console.error('Erro ao atualizar post no Supabase:', error);
+      alert('Erro ao atualizar no Supabase: ' + error.message);
+      return;
     }
 
     setPosts((prev) => prev.map((p) => (p.id === updatedPost.id ? updatedPost : p)));
   };
 
   const deletePost = async (id: string): Promise<boolean> => {
-    try {
-      await supabase
-        .from('posts')
-        .delete()
-        .eq('id', id);
-    } catch (err) {
-      console.warn('Apagando localmente.');
+    const { error } = await supabase
+      .from('posts')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Erro ao apagar post no Supabase:', error);
+      alert('Erro ao apagar no Supabase: ' + error.message);
+      return false;
     }
 
     setPosts((prev) => prev.filter((p) => p.id !== id));
