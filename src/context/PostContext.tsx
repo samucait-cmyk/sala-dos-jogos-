@@ -24,73 +24,8 @@ const normalizeCategory = (post: { id?: string; category?: string; benchmark?: a
   return 'Notícia';
 };
 
-const DEFAULT_POSTS: Post[] = [
-  {
-    id: '1',
-    title: 'Cyberpunk 2077 na Versão Definitiva: A Redenção Completa de Night City',
-    category: 'Review',
-    summary: 'Analisamos a experiência completa pós-atualizações massivas e expansão, provando que algumas lendas urbanas de Night City merecem...',
-    content: '## A Redenção de Night City\n\nApós anos de atualizações e o lançamento da expansão Phantom Liberty, Cyberpunk 2077 transformou-se no jogo que sempre prometeu ser...',
-    author: 'Redação Nexus',
-    date: '19 de outubro de 2026',
-    imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop',
-    rating: 9.5
-  },
-  {
-    id: '2',
-    title: 'Final Fantasy VII Rebirth no PC: uma aventura épica que merece sua atenção?',
-    category: 'Review',
-    summary: 'Final Fantasy VII Rebirth leva Cloud e seus companheiros para além de Midgar em uma aventura gigantesca, repleta de combates...',
-    content: '## Além de Midgar\n\nA escala proporcionada por Rebirth redefine o padrão dos JRPGs modernos...',
-    author: 'Redação Nexus',
-    date: '19 de outubro de 2026',
-    imageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop',
-    rating: 9.0,
-    benchmark: {
-      engine: 'Unreal Engine 4',
-      testGpu: 'NVIDIA RTX 4060',
-      testCpu: 'AMD Ryzen 5 7600',
-      fps1080p: 110,
-      fps1440p: 75,
-      fps2160p: 45,
-      optimizationRating: 'Boa'
-    }
-  },
-  {
-    id: '3',
-    title: 'Gears of War: E-Day — A Nostalgia da Serra Elétrica e o Retorno às Raízes',
-    category: 'Review',
-    summary: 'Prepare a armadura de ombro gigante e o bom humor: voltamos ao dia em que o inferno subterrâneo desabou sobre Sera.',
-    content: '## O Retorno de Marcus Fenix\n\nGears of War: E-Day resgata as origens da franquia com um visual fotorrealista impressionante na Unreal Engine 5...',
-    author: 'Redação Nexus',
-    date: '19 de outubro de 2026',
-    imageUrl: 'https://images.unsplash.com/photo-1612287233302-3f1d533dd04c?q=80&w=1200&auto=format&fit=crop',
-    rating: 9.6
-  },
-  {
-    id: '4',
-    title: 'A Evolução dos Motores Gráficos: Unreal Engine 5 Domina o Desenvolvimento Atual',
-    category: 'Notícia',
-    summary: 'Uma análise técnica sobre como a tecnologia da Epic Games acelerou a produção de jogos e elevou o patamar visual nos computadores e...',
-    content: '## O Poder da Unreal Engine 5\n\nNanite e Lumen tornaram-se o standard da indústria para renderização em tempo real...',
-    author: 'Redação Nexus',
-    date: '19 de outubro de 2026',
-    imageUrl: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop'
-  },
-  {
-    id: '5',
-    title: 'A Ascensão Imparável do Mercado de Jogos Independentes em 2026',
-    category: 'Notícia',
-    summary: 'O mercado indie conquista cada vez mais espaço, provando que inovação mecânica e narrativas corajosas pesam mais do que gráficos...',
-    content: '## A Força dos Indies\n\nOs estúdios independentes continuam a surpreender com propostas criativas e inovadoras...',
-    author: 'Redação Nexus',
-    date: '19 de outubro de 2026',
-    imageUrl: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=1200&auto=format&fit=crop'
-  }
-];
-
 export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [posts, setPosts] = useState<Post[]>(DEFAULT_POSTS);
+  const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     async function fetchPostsFromSupabase() {
@@ -101,7 +36,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      if (data && data.length > 0) {
+      if (data) {
         const mappedPosts: Post[] = data.map((item: any) => ({
           id: String(item.id),
           title: item.title,
@@ -114,12 +49,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
           date: '19 de outubro de 2026'
         }));
 
-        const map = new Map<string, Post>();
-        // Prioriza os posts do Supabase sobre os mocks se houver IDs duplicados, mas mantém os mocks caso não estejam na BD
-        DEFAULT_POSTS.forEach(p => map.set(p.id, p));
-        mappedPosts.forEach(p => map.set(p.id, p));
-
-        setPosts(Array.from(map.values()));
+        setPosts(mappedPosts);
       }
     }
 
