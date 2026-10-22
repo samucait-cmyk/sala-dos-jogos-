@@ -1,6 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Post } from '../types/game';
-import { supabase } from '../supabaseClient';
+
+// Variáveis de ambiente configuradas na Vercel para o Upstash Redis
+const KV_URL = import.meta.env.VITE_KV_URL;
+const KV_AUTH = import.meta.env.VITE_KV_AUTH;
+const STORAGE_KEY = 'sala_dos_jogos_posts_data';
 
 interface PostContextType {
   posts: Post[];
@@ -27,119 +31,107 @@ const normalizeCategory = (post: { id?: string; category?: string; benchmark?: a
 export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [posts, setPosts] = useState<Post[]>([]);
 
-  // Buscar posts diretamente do Supabase ao carregar
+  // Buscar posts diretamente do Upstash Redis ao carregar
   useEffect(() => {
-    async function fetchPostsFromSupabase() {
-      const { data, error } = await supabase.from('posts').select('*');
-      
-      if (error) {
-        console.error('Erro ao buscar posts do Supabase:', error);
-        alert('Erro ao carregar do Supabase: ' + error.message);
-        return;
-      }
+    async function fetchPostsFromKV() {
+      try {
+        if (!KV_URL || !KV_AUTH) {
+          console.warn('Variáveis VITE_KV_URL e VITE_KV_AUTH não encontradas.');
+          return;
+        }
 
-      if (data) {
-        const mappedPosts: Post[] = data.map((item: any) => ({
-          id: String(item.id),
-          title: item.title || '',
-          subtitle: item.subtitle || '',
-          summary: item.summary || item.subtitle || '',
-          content: item.content || '',
-          imageUrl: item.image || '',
-          category: normalizeCategory({ category: item.category }),
-          author: 'Redação Nexus',
-          date: '19 de outubro de 2026'
-        }));
+        const response = await fetch(KV_URL, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${KV_AUTH}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(['GET', STORAGE_KEY]),
+        });
 
-        setPosts(mappedPosts);
+        const data = await response.json();
+        
+        if (data && data.result) {
+          const parsedPosts = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
+          if (Array.isArray(parsedPosts)) {
+            setPosts(parsedPosts);
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao buscar posts do Upstash:', error);
       }
     }
 
-    fetchPostsFromSupabase();
+    fetchPostsFromKV();
   }, []);
 
+  // Função auxiliar para salvar a lista completa no Upstash Redis
+  const savePostsToKV = async (updatedPosts: Post[]) => {
+    try {
+      if (!KV_URL || !KV_AUTH) return;
+
+      const response = await fetch(KV_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${KV_AUTH}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(['SET', STORAGE_KEY, JSON.stringify(updatedPosts)]),
+      });
+
+      const data = await response.json();
+      if (data.error) {
+        console.error('Erro retornado pelo Upstash ao salvar:', data.error);
+      }
+    } catch (err: any) {
+      console.error('Falha de rede ao comunicar com o Upstash:', err);
+    }
+  };
+
   const addPost = async (newPost: Post) => {
-    console.log("A tentar enviar para o Supabase...", newPost);
+    console.log("A tentar enviar para o Upstash...", newPost);
     
-    const postToAdd = {
-      title: newPost.title,
+    const postToAdd: Post = {
+      ...newPost,
+      id: newPost.id || crypto.randomUUID(),
       subtitle: newPost.subtitle || '',
       summary: newPost.summary || '',
-      content: newPost.content,
-      image: newPost.imageUrl || '',
-      category: normalizeCategory(newPost)
+      imageUrl: newPost.imageUrl || '',
+      category: normalizeCategory(newPost),
+      author: newPost.author || 'Redação Nexus',
+      date: newPost.date || '19 de outubro de 2026'
     };
 
     try {
-      const { data, error } = await supabase
-        .from('posts')
-        .insert([postToAdd])
-        .select();
-
-      if (error) {
-        console.error('Erro retornado pelo Supabase:', error);
-        alert('Erro do Supabase: ' + error.message);
-        return;
-      }
-
-      if (data && data[0]) {
-        const created: Post = {
-          id: String(data[0].id),
-          title: data[0].title,
-          subtitle: data[0].subtitle || '',
-          summary: data[0].summary || '',
-          content: data[0].content,
-          imageUrl: data[0].image || '',
-          category: normalizeCategory({ category: data[0].category }),
-          author: 'Redação Nexus',
-          date: '19 de outubro de 2026'
-        };
-        setPosts((prev) => [created, ...prev]);
-        alert('Matéria publicada e salva na nuvem com sucesso!');
-      }
+      const updatedPosts = [postToAdd, ...posts];
+      setPosts(updatedPosts);
+      await savePostsToKV(updatedPosts);
+      alert('Matéria publicada e salva na nuvem com sucesso!');
     } catch (err: any) {
-      console.error('Falha de rede ao comunicar com o Supabase:', err);
-      alert('Erro de conexão crítico: ' + (err.message || 'Falha ao contactar o servidor.'));
+      console.error('Erro ao adicionar post:', err);
+      alert('Erro ao guardar a matéria.');
     }
   };
 
   const updatePost = async (updatedPost: Post) => {
-    const postToUpdate = {
-      title: updatedPost.title,
+    const processedPost: Post = {
+      ...updatedPost,
       subtitle: updatedPost.subtitle || '',
       summary: updatedPost.summary || '',
-      content: updatedPost.content,
-      image: updatedPost.imageUrl || '',
+      imageUrl: updatedPost.imageUrl || '',
       category: normalizeCategory(updatedPost)
     };
 
-    const { error } = await supabase
-      .from('posts')
-      .update(postToUpdate)
-      .eq('id', updatedPost.id);
-
-    if (error) {
-      console.error('Erro ao atualizar post no Supabase:', error);
-      alert('Erro ao atualizar no Supabase: ' + error.message);
-      return;
-    }
-
-    setPosts((prev) => prev.map((p) => (p.id === updatedPost.id ? updatedPost : p)));
+    const updatedPosts = posts.map((p) => (p.id === processedPost.id ? processedPost : p));
+    setPosts(updatedPosts);
+    await savePostsToKV(updatedPosts);
+    alert('Matéria atualizada com sucesso!');
   };
 
   const deletePost = async (id: string): Promise<boolean> => {
-    const { error } = await supabase
-      .from('posts')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      console.error('Erro ao apagar post no Supabase:', error);
-      alert('Erro ao apagar no Supabase: ' + error.message);
-      return false;
-    }
-
-    setPosts((prev) => prev.filter((p) => p.id !== id));
+    const updatedPosts = posts.filter((p) => p.id !== id);
+    setPosts(updatedPosts);
+    await savePostsToKV(updatedPosts);
     return true;
   };
 
