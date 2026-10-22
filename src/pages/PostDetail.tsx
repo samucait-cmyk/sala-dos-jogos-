@@ -347,15 +347,24 @@ export const PostDetail: React.FC = () => {
 
         <RelatedPosts currentPostId={post.id} category={post.category} />
 
-        <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: `1px solid ${colors.cardBorder}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* Botão Voltar Otimizado para Mobile sem duplicação de rodapé */}
+        <div style={{ marginTop: '3rem', paddingTop: '1.5rem', borderTop: `1px solid ${colors.cardBorder}` }}>
           <Link
             to={backTarget.path}
             onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
-            style={{ color: colors.primary, textDecoration: 'none', fontWeight: 'bold', fontSize: '0.9rem' }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              color: colors.primary,
+              textDecoration: 'none',
+              fontWeight: 'bold',
+              fontSize: '0.95rem',
+              padding: '0.5rem 0'
+            }}
           >
             ← {backTarget.label}
           </Link>
-          <span style={{ color: colors.textSecondary, fontSize: '0.85rem' }}>Sala dos Jogos Portal Gamer © 2026</span>
         </div>
       </article>
     </MainLayout>
