@@ -28,41 +28,51 @@ html, body, #root {
    TIPOGRAFIA E QUEBRA DE TEXTO PADRÃO PROFISSIONAL
    ========================================== */
 
-/* 1. Múltiplos parágrafos, títulos e subtítulos movem a palavra inteira para a linha de baixo */
-p, span, h1, h2, h3, h4, h5, h6, a, li, div, article, section {
+/* 1. Regra para textos de matérias, títulos e parágrafos do corpo da página */
+p, span, h1, h2, h3, h4, h5, h6, a, li, article, section {
   max-width: 100%;
-  overflow-wrap: break-word; /* Move a palavra inteira se não couber na linha */
-  word-break: normal;        /* Impede o corte de palavras normais do português ao meio */
-  hyphens: manual;           /* Desativa hifenização automática forçada */
+  overflow-wrap: break-word; /* Move palavras inteiras para a linha de baixo */
+  word-break: normal;        /* Não corta palavras do português ao meio */
+  hyphens: manual;
 }
 
-/* 2. Blindagem extra para subtítulos e descrições em qualquer página ou cartão */
-.post-subtitle, [class*="subtitle"], [class*="description"], header p, article header p {
+/* 2. Blindagem extra para subtítulos e descrições das matérias */
+.post-subtitle, [class*="subtitle"], [class*="description"], article header p {
   white-space: normal !important;
   overflow-wrap: break-word !important;
   word-break: normal !important;
   max-width: 100% !important;
 }
 
-/* 3. Caso exista algum texto de teste continuo sem espaços, permite a quebra segura apenas nele */
-.force-break {
-  word-break: break-all;
-}
+/* ==========================================
+   ISOLAMENTO E CORREÇÃO DO MENU & NEWS TICKER
+   ========================================== */
 
-/* 4. Ajustes de cabeçalho e menu de navegação */
-header, nav, .news-ticker, header a, header span, nav a {
+/* Garante que links do menu não quebrem linhas indesejadas */
+header nav a, header nav span, nav button {
+  white-space: nowrap !important;
   word-break: normal !important;
-  white-space: nowrap;
 }
 
-.news-ticker-text, .ticker-content {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
+/* Estrutura do Ticker de Notícias (Barra Em Alta) */
+[class*="ticker"], [class*="NewsTicker"], .news-ticker-container {
+  display: flex !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
-/* 5. Mídia e Toque Responsivo */
+/* Truncamento elegante com reticências no texto em alta */
+[class*="ticker"] a, [class*="ticker"] span, .news-ticker-text {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: normal !important;
+  max-width: 100% !important;
+}
+
+/* 3. Mídia e Toque Responsivo */
 img, video, canvas, svg {
   max-width: 100%;
   height: auto;
