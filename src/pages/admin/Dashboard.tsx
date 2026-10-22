@@ -87,7 +87,7 @@ export const Dashboard: React.FC = () => {
         <div>
           <h1 style={{ fontSize: '1.8rem', margin: 0, color: '#fff' }}>Sala dos Jogos Admin</h1>
           <p style={{ color: '#94a3b8', marginTop: '0.25rem', fontSize: '0.9rem' }}>
-            Gerencie matérias, notícias e a moderação de comentários da comunidade (Sincronizado com o Supabase).
+            Gerencie matérias, notícias e a moderação de comentários da comunidade (Sincronizado com Upstash Redis).
           </p>
         </div>
         <Link
