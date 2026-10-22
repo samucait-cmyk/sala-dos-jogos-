@@ -27,13 +27,16 @@ html, body, #root {
 /* ==========================================
    TIPOGRAFIA E QUEBRA DE TEXTO PADRÃO PROFISSIONAL
    ========================================== */
+
+/* 1. Regra para textos de matérias, títulos e parágrafos do corpo da página */
 p, span, h1, h2, h3, h4, h5, h6, a, li, article, section {
   max-width: 100%;
-  overflow-wrap: break-word;
-  word-break: normal;
+  overflow-wrap: break-word; /* Move palavras inteiras para a linha de baixo */
+  word-break: normal;        /* Não corta palavras do português ao meio */
   hyphens: manual;
 }
 
+/* 2. Blindagem extra para subtítulos e descrições das matérias */
 .post-subtitle, [class*="subtitle"], [class*="description"], article header p {
   white-space: normal !important;
   overflow-wrap: break-word !important;
@@ -44,11 +47,14 @@ p, span, h1, h2, h3, h4, h5, h6, a, li, article, section {
 /* ==========================================
    ISOLAMENTO E CORREÇÃO DO MENU & NEWS TICKER
    ========================================== */
+
+/* Garante que links do menu não quebrem linhas indesejadas */
 header nav a, header nav span, nav button {
   white-space: nowrap !important;
   word-break: normal !important;
 }
 
+/* Estrutura do Ticker de Notícias (Barra Em Alta) */
 [class*="ticker"], [class*="NewsTicker"], .news-ticker-container {
   display: flex !important;
   align-items: center !important;
@@ -57,6 +63,7 @@ header nav a, header nav span, nav button {
   max-width: 100% !important;
 }
 
+/* Truncamento elegante com reticências no texto em alta */
 [class*="ticker"] a, [class*="ticker"] span, .news-ticker-text {
   white-space: nowrap !important;
   overflow: hidden !important;
@@ -65,79 +72,7 @@ header nav a, header nav span, nav button {
   max-width: 100% !important;
 }
 
-/* ==========================================
-   CARROSSEL RESPONSIVO (Desktop: Imagem Limpa Acima / Texto Abaixo)
-   ========================================== */
-.hero-card {
-  position: relative;
-  width: 100%;
-  height: 460px;
-  min-height: 460px;
-  max-height: 460px;
-  border-radius: 24px;
-  overflow: hidden;
-  background-color: #0f172a;
-  cursor: pointer;
-}
-
-.hero-image-box {
-  position: absolute;
-  inset: 0;
-}
-
-.hero-overlay-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 20%, rgba(15, 23, 42, 0.6) 60%, rgba(0, 0, 0, 0.2) 100%);
-}
-
-.hero-content-box {
-  position: relative;
-  z-index: 10;
-  padding: 2.5rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-sizing: border-box;
-}
-
-/* Comportamento exclusivo para Desktop e Notebook (Largura a partir de 768px) */
-@media (min-width: 768px) {
-  .hero-card {
-    height: 560px !important;
-    min-height: 560px !important;
-    max-height: 560px !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  
-  .hero-image-box {
-    position: relative !important;
-    width: 100% !important;
-    height: 310px !important;
-    inset: unset !important;
-  }
-  
-  .hero-overlay-gradient {
-    display: none !important; /* Remove o escuro na imagem no desktop */
-  }
-  
-  .hero-content-box {
-    position: relative !important;
-    flex: 1 !important;
-    height: auto !important;
-    padding: 1.5rem 2.5rem !important;
-    background-color: #0f172a !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-  }
-}
-
-/* ==========================================
-   MÍDIA E TOQUE RESPONSIVO
-   ========================================== */
+/* 3. Mídia e Toque Responsivo */
 img, video, canvas, svg {
   max-width: 100%;
   height: auto;
