@@ -59,10 +59,10 @@ export const FeaturedHero: React.FC = () => {
     currentPost.category.toLowerCase().includes('analise') ||
     !!currentPost.benchmark;
 
-  // Gradiente adaptado: Modo Claro limpo/luminoso com alta legibilidade e Modo Escuro imersivo equilibrado
+  // Gradiente suave no modo claro para destacar a imagem em cima e proteger o texto embaixo
   const overlayBackground = mode === 'light'
-    ? 'linear-gradient(to top, rgba(248, 250, 252, 0.98) 30%, rgba(248, 250, 252, 0.85) 70%, rgba(248, 250, 252, 0.4) 100%)'
-    : 'linear-gradient(to top, rgba(15, 23, 42, 0.92) 20%, rgba(15, 23, 42, 0.6) 65%, rgba(15, 23, 42, 0.25) 100%)';
+    ? 'linear-gradient(to top, rgba(255, 255, 255, 0.95) 30%, rgba(255, 255, 255, 0.65) 60%, rgba(255, 255, 255, 0.1) 100%)'
+    : 'linear-gradient(to top, rgba(15, 23, 42, 0.92) 20%, rgba(15, 23, 42, 0.6) 65%, rgba(15, 23, 42, 0.2) 100%)';
 
   const textColor = mode === 'light' ? '#0f172a' : '#ffffff';
   const textSecondaryColor = mode === 'light' ? '#334155' : '#cbd5e1';
@@ -95,7 +95,7 @@ export const FeaturedHero: React.FC = () => {
               : `0 16px 36px rgba(0, 0, 0, 0.5), 0 0 25px ${colors.glow}`
           }}
         >
-          {/* Imagem de fundo cobrindo todo o carrossel */}
+          {/* Imagem cobrindo 100% do fundo */}
           <div
             className="hero-image-box"
             style={{
@@ -117,14 +117,13 @@ export const FeaturedHero: React.FC = () => {
                 }}
               />
             )}
-            {/* Camada de cobertura (overlay) refinada para cada tema */}
             <div
               className="hero-overlay-gradient"
               style={{ background: overlayBackground }}
             />
           </div>
 
-          {/* Conteúdo sobreposto cobrindo todo o carrossel */}
+          {/* Conteúdo estruturado para empurrar o título/subtítulo para baixo */}
           <div
             className="hero-content-box"
             style={{
@@ -133,53 +132,55 @@ export const FeaturedHero: React.FC = () => {
               transition: 'opacity 0.3s ease, transform 0.3s ease'
             }}
           >
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+            {/* Topo: Tags (Destaque, Categoria, Nota) */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <span
+                style={{
+                  backgroundColor: colors.primary,
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.75rem',
+                  padding: '0.3rem 0.75rem',
+                  borderRadius: '6px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+              >
+                🔥 Destaque Principal
+              </span>
+              <span
+                style={{
+                  backgroundColor: mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.15)',
+                  backdropFilter: 'blur(4px)',
+                  color: textColor,
+                  border: mode === 'light' ? '1px solid rgba(15, 23, 42, 0.15)' : '1px solid rgba(255, 255, 255, 0.25)',
+                  fontWeight: 700,
+                  fontSize: '0.75rem',
+                  padding: '0.3rem 0.75rem',
+                  borderRadius: '6px',
+                  textTransform: 'uppercase'
+                }}
+              >
+                {currentPost.category}
+              </span>
+              {currentPost.rating && (
                 <span
                   style={{
-                    backgroundColor: colors.primary,
+                    backgroundColor: '#10b981',
                     color: '#ffffff',
-                    fontWeight: 800,
-                    fontSize: '0.75rem',
-                    padding: '0.3rem 0.75rem',
-                    borderRadius: '6px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px'
-                  }}
-                >
-                  🔥 Destaque Principal
-                </span>
-                <span
-                  style={{
-                    backgroundColor: mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.15)',
-                    backdropFilter: 'blur(4px)',
-                    color: textColor,
-                    border: mode === 'light' ? '1px solid rgba(15, 23, 42, 0.15)' : '1px solid rgba(255, 255, 255, 0.25)',
                     fontWeight: 700,
-                    fontSize: '0.75rem',
-                    padding: '0.3rem 0.75rem',
-                    borderRadius: '6px',
-                    textTransform: 'uppercase'
+                    fontSize: '0.8rem',
+                    padding: '0.25rem 0.6rem',
+                    borderRadius: '6px'
                   }}
                 >
-                  {currentPost.category}
+                  ★ {currentPost.rating.toFixed(1)}
                 </span>
-                {currentPost.rating && (
-                  <span
-                    style={{
-                      backgroundColor: '#10b981',
-                      color: '#ffffff',
-                      fontWeight: 700,
-                      fontSize: '0.8rem',
-                      padding: '0.25rem 0.6rem',
-                      borderRadius: '6px'
-                    }}
-                  >
-                    ★ {currentPost.rating.toFixed(1)}
-                  </span>
-                )}
-              </div>
+              )}
+            </div>
 
+            {/* Centro-Baixo: Título e Subtítulo posicionados mais para baixo */}
+            <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
               <h2
                 style={{
                   fontSize: '1.85rem',
@@ -192,7 +193,7 @@ export const FeaturedHero: React.FC = () => {
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
-                  textShadow: mode === 'dark' ? '0 2px 4px rgba(0, 0, 0, 0.6)' : '0 1px 2px rgba(255, 255, 255, 0.8)'
+                  textShadow: mode === 'dark' ? '0 2px 4px rgba(0, 0, 0, 0.6)' : '0 1px 2px rgba(255, 255, 255, 0.9)'
                 }}
               >
                 {currentPost.title}
@@ -210,14 +211,15 @@ export const FeaturedHero: React.FC = () => {
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  textShadow: mode === 'dark' ? '0 1px 2px rgba(0, 0, 0, 0.6)' : '0 1px 1px rgba(255, 255, 255, 0.8)'
+                  textShadow: mode === 'dark' ? '0 1px 2px rgba(0, 0, 0, 0.6)' : '0 1px 1px rgba(255, 255, 255, 0.9)'
                 }}
               >
                 {currentPost.summary}
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', paddingTop: '1rem' }}>
+            {/* Rodapé do Card: Autor, Data e Botão */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', paddingTop: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: textSecondaryColor, fontSize: '0.875rem' }}>
                 <span>Por <strong style={{ color: textColor }}>{currentPost.author}</strong></span>
                 <span>•</span>
