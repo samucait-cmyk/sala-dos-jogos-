@@ -5,6 +5,11 @@ const KV_URL = import.meta.env.VITE_KV_URL;
 const KV_AUTH = import.meta.env.VITE_KV_AUTH;
 const STORAGE_KEY = 'sala_dos_jogos_posts_data';
 
+// Debug para verificar se as variáveis carregaram no build
+console.log('--- DEBUG UPSTASH ---');
+console.log('KV_URL definida:', Boolean(KV_URL), KV_URL);
+console.log('KV_AUTH definida:', Boolean(KV_AUTH), KV_AUTH ? 'Token presente (oculto)' : 'FALTOU O TOKEN!');
+
 interface PostContextType {
   posts: Post[];
   addPost: (post: Post) => Promise<void>;
@@ -30,19 +35,18 @@ const normalizeCategory = (post: { id?: string; category?: string; benchmark?: a
 export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [posts, setPosts] = useState<Post[]>([]);
 
-  // Buscar posts diretamente do Upstash Redis ao carregar
   useEffect(() => {
     async function fetchPostsFromKV() {
       try {
         if (!KV_URL || !KV_AUTH) {
-          console.warn('Variáveis VITE_KV_URL e VITE_KV_AUTH não encontradas.');
+          console.error('Erro: VITE_KV_URL ou VITE_KV_AUTH estão vazios no código compilado!');
           return;
         }
 
         const response = await fetch(KV_URL, {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${KV_AUTH}`,
+            Authorization: `Bearer ${KV_AUTH.trim()}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(['GET', STORAGE_KEY]),
@@ -64,18 +68,17 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
     fetchPostsFromKV();
   }, []);
 
-  // Função para salvar a lista completa no Upstash Redis com tratamento de erros visíveis
   const savePostsToKV = async (updatedPosts: Post[]) => {
     try {
       if (!KV_URL || !KV_AUTH) {
-        alert('Erro crítico: As variáveis VITE_KV_URL ou VITE_KV_AUTH não estão definidas.');
+        alert('Erro crítico: Variáveis de ambiente da base de dados em falta.');
         return;
       }
 
       const response = await fetch(KV_URL, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${KV_AUTH}`,
+          Authorization: `Bearer ${KV_AUTH.trim()}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(['SET', STORAGE_KEY, JSON.stringify(updatedPosts)]),
@@ -85,11 +88,11 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (data.error) {
         console.error('Erro retornado pelo Upstash:', data.error);
-        alert('Erro do Upstash ao guardar: ' + data.error);
+        alert('Erro de Autenticação no Upstash: ' + data.error);
       }
     } catch (err: any) {
       console.error('Falha de rede ao comunicar com o Upstash:', err);
-      alert('Falha de rede ao comunicar com a base de dados: ' + (err.message || 'Erro desconhecido'));
+      alert('Falha de rede: ' + (err.message || 'Erro desconhecido'));
     }
   };
 

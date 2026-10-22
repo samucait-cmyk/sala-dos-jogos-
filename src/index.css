@@ -16,9 +16,40 @@ html, body, #root {
   overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
 }
 
 #root {
   display: flex;
   flex-direction: column;
+}
+
+/* ==========================================
+   CONTROLO RIGOROSO DE TEXTO E LIMITES (PC & MOBILE)
+   ========================================== */
+
+/* Força títulos, parágrafos, links e blocos a respeitarem o limite do ecrã e descerem automaticamente */
+p, span, h1, h2, h3, h4, h5, h6, a, li, div, article, section {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-all; /* Força a quebra exata no limite exato da margem/ecrã */
+}
+
+/* Imagens e vídeos perfeitamente contidos dentro do layout */
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Experiência de toque otimizada para dispositivos móveis */
+button, a, input, select, textarea {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Segurança para áreas de entalhe em smartphones modernos */
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
