@@ -59,6 +59,9 @@ export const FeaturedHero: React.FC = () => {
     currentPost.category.toLowerCase().includes('analise') ||
     !!currentPost.benchmark;
 
+  // Substitui automaticamente 'Redação Nexus' por 'Redação Sala dos Jogos'
+  const displayAuthor = (!currentPost.author || currentPost.author.includes('Nexus')) ? 'Redação Sala dos Jogos' : currentPost.author;
+
   return (
     <div
       onMouseEnter={() => setIsPaused(true)}
@@ -207,7 +210,7 @@ export const FeaturedHero: React.FC = () => {
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', paddingTop: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: '#cbd5e1', fontSize: '0.875rem' }}>
-                <span>Por <strong style={{ color: '#ffffff' }}>{currentPost.author}</strong></span>
+                <span>Por <strong style={{ color: '#ffffff' }}>{displayAuthor}</strong></span>
                 <span>•</span>
                 <span>{currentPost.date}</span>
               </div>
