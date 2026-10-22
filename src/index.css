@@ -66,17 +66,16 @@ header nav a, header nav span, nav button {
 }
 
 /* ==========================================
-   CARROSSEL RESPONSIVO (Desktop: Imagem Limpa Acima / Texto Abaixo)
+   CARROSSEL COM IMAGEM TOTAL E OVERLAY INTELIGENTE
    ========================================== */
 .hero-card {
   position: relative;
   width: 100%;
-  height: 460px;
-  min-height: 460px;
-  max-height: 460px;
+  height: 480px;
+  min-height: 480px;
+  max-height: 480px;
   border-radius: 24px;
   overflow: hidden;
-  background-color: #0f172a;
   cursor: pointer;
 }
 
@@ -88,7 +87,7 @@ header nav a, header nav span, nav button {
 .hero-overlay-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 20%, rgba(15, 23, 42, 0.6) 60%, rgba(0, 0, 0, 0.2) 100%);
+  transition: background 0.3s ease;
 }
 
 .hero-content-box {
@@ -102,36 +101,11 @@ header nav a, header nav span, nav button {
   box-sizing: border-box;
 }
 
-/* Comportamento exclusivo para Desktop e Notebook (Largura a partir de 768px) */
 @media (min-width: 768px) {
   .hero-card {
-    height: 560px !important;
-    min-height: 560px !important;
-    max-height: 560px !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  
-  .hero-image-box {
-    position: relative !important;
-    width: 100% !important;
-    height: 310px !important;
-    inset: unset !important;
-  }
-  
-  .hero-overlay-gradient {
-    display: none !important; /* Remove o escuro na imagem no desktop */
-  }
-  
-  .hero-content-box {
-    position: relative !important;
-    flex: 1 !important;
-    height: auto !important;
-    padding: 1.5rem 2.5rem !important;
-    background-color: #0f172a !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
+    height: 520px !important;
+    min-height: 520px !important;
+    max-height: 520px !important;
   }
 }
 

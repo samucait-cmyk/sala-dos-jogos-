@@ -59,6 +59,14 @@ export const FeaturedHero: React.FC = () => {
     currentPost.category.toLowerCase().includes('analise') ||
     !!currentPost.benchmark;
 
+  // Gradiente adaptado: Modo Claro limpo/luminoso com alta legibilidade e Modo Escuro imersivo equilibrado
+  const overlayBackground = mode === 'light'
+    ? 'linear-gradient(to top, rgba(248, 250, 252, 0.98) 30%, rgba(248, 250, 252, 0.85) 70%, rgba(248, 250, 252, 0.4) 100%)'
+    : 'linear-gradient(to top, rgba(15, 23, 42, 0.92) 20%, rgba(15, 23, 42, 0.6) 65%, rgba(15, 23, 42, 0.25) 100%)';
+
+  const textColor = mode === 'light' ? '#0f172a' : '#ffffff';
+  const textSecondaryColor = mode === 'light' ? '#334155' : '#cbd5e1';
+
   return (
     <div
       onMouseEnter={() => setIsPaused(true)}
@@ -80,13 +88,14 @@ export const FeaturedHero: React.FC = () => {
         <div
           className="hero-card"
           style={{
+            backgroundColor: mode === 'light' ? '#f8fafc' : '#0f172a',
             border: mode === 'light' ? `1px solid ${colors.border}` : `1px solid ${colors.primary}`,
             boxShadow: mode === 'light'
-              ? '0 12px 30px rgba(0,0,0,0.12)'
+              ? '0 12px 30px rgba(0,0,0,0.08)'
               : `0 16px 36px rgba(0, 0, 0, 0.5), 0 0 25px ${colors.glow}`
           }}
         >
-          {/* Imagem de Fundo em Alta Definição */}
+          {/* Imagem de fundo cobrindo todo o carrossel */}
           <div
             className="hero-image-box"
             style={{
@@ -108,11 +117,14 @@ export const FeaturedHero: React.FC = () => {
                 }}
               />
             )}
-            {/* Overlay Escuro com Gradiente (visível apenas no mobile) */}
-            <div className="hero-overlay-gradient" />
+            {/* Camada de cobertura (overlay) refinada para cada tema */}
+            <div
+              className="hero-overlay-gradient"
+              style={{ background: overlayBackground }}
+            />
           </div>
 
-          {/* Conteúdo do Card (Sobreposto no Mobile / Na Parte de Baixo no Desktop) */}
+          {/* Conteúdo sobreposto cobrindo todo o carrossel */}
           <div
             className="hero-content-box"
             style={{
@@ -122,7 +134,7 @@ export const FeaturedHero: React.FC = () => {
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
                 <span
                   style={{
                     backgroundColor: colors.primary,
@@ -139,10 +151,10 @@ export const FeaturedHero: React.FC = () => {
                 </span>
                 <span
                   style={{
-                    backgroundColor: mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.15)',
+                    backgroundColor: mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.15)',
                     backdropFilter: 'blur(4px)',
-                    color: mode === 'light' ? '#0f172a' : '#ffffff',
-                    border: mode === 'light' ? '1px solid rgba(0, 0, 0, 0.15)' : '1px solid rgba(255, 255, 255, 0.25)',
+                    color: textColor,
+                    border: mode === 'light' ? '1px solid rgba(15, 23, 42, 0.15)' : '1px solid rgba(255, 255, 255, 0.25)',
                     fontWeight: 700,
                     fontSize: '0.75rem',
                     padding: '0.3rem 0.75rem',
@@ -170,16 +182,17 @@ export const FeaturedHero: React.FC = () => {
 
               <h2
                 style={{
-                  fontSize: '1.65rem',
+                  fontSize: '1.85rem',
                   fontWeight: 900,
-                  color: colors.text,
+                  color: textColor,
                   lineHeight: 1.25,
-                  marginBottom: '0.35rem',
+                  marginBottom: '0.5rem',
                   maxWidth: '850px',
                   display: '-webkit-box',
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+                  textShadow: mode === 'dark' ? '0 2px 4px rgba(0, 0, 0, 0.6)' : '0 1px 2px rgba(255, 255, 255, 0.8)'
                 }}
               >
                 {currentPost.title}
@@ -187,25 +200,26 @@ export const FeaturedHero: React.FC = () => {
 
               <p
                 style={{
-                  color: colors.textSecondary,
-                  fontSize: '0.95rem',
+                  color: textSecondaryColor,
+                  fontSize: '1rem',
                   fontWeight: 500,
-                  lineHeight: 1.4,
+                  lineHeight: 1.5,
                   maxWidth: '750px',
                   display: '-webkit-box',
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
-                  textOverflow: 'ellipsis'
+                  textOverflow: 'ellipsis',
+                  textShadow: mode === 'dark' ? '0 1px 2px rgba(0, 0, 0, 0.6)' : '0 1px 1px rgba(255, 255, 255, 0.8)'
                 }}
               >
                 {currentPost.summary}
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', paddingTop: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: colors.textSecondary, fontSize: '0.85rem' }}>
-                <span>Por <strong style={{ color: colors.text }}>{currentPost.author}</strong></span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', paddingTop: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: textSecondaryColor, fontSize: '0.875rem' }}>
+                <span>Por <strong style={{ color: textColor }}>{currentPost.author}</strong></span>
                 <span>•</span>
                 <span>{currentPost.date}</span>
               </div>
@@ -215,8 +229,8 @@ export const FeaturedHero: React.FC = () => {
                   backgroundColor: colors.primary,
                   color: '#ffffff',
                   fontWeight: 800,
-                  fontSize: '0.85rem',
-                  padding: '0.55rem 1.1rem',
+                  fontSize: '0.9rem',
+                  padding: '0.65rem 1.25rem',
                   borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
