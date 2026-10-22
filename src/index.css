@@ -11,7 +11,7 @@ html, body, #root {
   min-height: 100vh;
   margin: 0 !important;
   padding: 0 !important;
-  background-color: #0f172a !important; /* Cor exata do fundo dark do Nexus */
+  background-color: #0f172a !important;
   color: #f8fafc;
   overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -25,30 +25,47 @@ html, body, #root {
 }
 
 /* ==========================================
-   CONTROLO RIGOROSO DE TEXTO E LIMITES (PC & MOBILE)
+   CONTROLO RIGOROSO DE TEXTO E LIMITES
    ========================================== */
 
-/* Força títulos, parágrafos, links e blocos a respeitarem o limite do ecrã e descerem automaticamente */
-p, span, h1, h2, h3, h4, h5, h6, a, li, div, article, section {
+/* Força títulos, parágrafos e artigos a quebrarem no limite */
+p, article, section, .post-content, .post-title {
   max-width: 100%;
   overflow-wrap: break-word;
-  word-break: break-all; /* Força a quebra exata no limite exato da margem/ecrã */
+  word-break: break-all;
 }
 
-/* Imagens e vídeos perfeitamente contidos dentro do layout */
+/* 
+   AJUSTE DO MENU / BARRA FLUTUANTE (NEWS TICKER / HEADER):
+   Impede que os links do menu e a barra de notícias em destaque estourem a linha
+*/
+header, nav, .news-ticker, header a, header span, nav a {
+  word-break: normal !important;
+  white-space: nowrap;
+}
+
+/* Truncamento elegante para notícias no ticker superior */
+.news-ticker-text, .ticker-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Imagens e vídeos contidos */
 img, video, canvas, svg {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-/* Experiência de toque otimizada para dispositivos móveis */
+/* Toque fluido no mobile */
 button, a, input, select, textarea {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Segurança para áreas de entalhe em smartphones modernos */
+/* Áreas seguras móveis */
 body {
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
