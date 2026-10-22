@@ -25,26 +25,28 @@ html, body, #root {
 }
 
 /* ==========================================
-   CONTROLO RIGOROSO DE TEXTO E LIMITES
+   TIPOGRAFIA E QUEBRA DE TEXTO PADRÃO PROFISSIONAL
    ========================================== */
 
-/* Força títulos, parágrafos e artigos a quebrarem no limite */
-p, article, section, .post-content, .post-title {
+/* 1. Múltiplos parágrafos, títulos e subtítulos movem a palavra inteira para a linha de baixo */
+p, span, h1, h2, h3, h4, h5, h6, a, li, div, article, section {
   max-width: 100%;
-  overflow-wrap: break-word;
+  overflow-wrap: break-word; /* Move a palavra inteira se não couber na linha */
+  word-break: normal;        /* Impede o corte de palavras normais do português ao meio */
+  hyphens: manual;           /* Desativa hifenização automática forçada */
+}
+
+/* 2. Caso exista algum texto de teste continuo sem espaços, permite a quebra segura apenas nele */
+.force-break {
   word-break: break-all;
 }
 
-/* 
-   AJUSTE DO MENU / BARRA FLUTUANTE (NEWS TICKER / HEADER):
-   Impede que os links do menu e a barra de notícias em destaque estourem a linha
-*/
+/* 3. Ajustes de cabeçalho e menu de navegação */
 header, nav, .news-ticker, header a, header span, nav a {
   word-break: normal !important;
   white-space: nowrap;
 }
 
-/* Truncamento elegante para notícias no ticker superior */
 .news-ticker-text, .ticker-content {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -52,20 +54,18 @@ header, nav, .news-ticker, header a, header span, nav a {
   max-width: 100%;
 }
 
-/* Imagens e vídeos contidos */
+/* 4. Mídia e Toque Responsivo */
 img, video, canvas, svg {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-/* Toque fluido no mobile */
 button, a, input, select, textarea {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Áreas seguras móveis */
 body {
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
