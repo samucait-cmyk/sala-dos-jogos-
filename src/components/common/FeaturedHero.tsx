@@ -81,7 +81,9 @@ export const FeaturedHero: React.FC = () => {
           style={{
             position: 'relative',
             width: '100%',
-            minHeight: '440px',
+            height: '460px',       /* Altura fixa uniforme para evitar saltos */
+            minHeight: '460px',
+            maxHeight: '460px',
             borderRadius: '24px',
             overflow: 'hidden',
             border: mode === 'light' ? `1px solid ${colors.border}` : `1px solid ${colors.primary}`,
@@ -114,7 +116,7 @@ export const FeaturedHero: React.FC = () => {
                 }}
               />
             )}
-            {/* Overlay Escuro com Gradiente para garantir imagem viva e leitura impecável do texto no Modo Claro e Escuro */}
+            {/* Overlay Escuro com Gradiente */}
             <div
               style={{
                 position: 'absolute',
@@ -130,90 +132,101 @@ export const FeaturedHero: React.FC = () => {
               position: 'relative',
               zIndex: 10,
               padding: '2.5rem',
+              height: '100%',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'flex-end',
-              minHeight: '440px',
+              justifyContent: 'space-between', /* Mantém os elementos perfeitamente distribuídos */
               boxSizing: 'border-box',
               opacity: isFading ? 0 : 1,
               transform: isFading ? 'translateY(8px)' : 'translateY(0)',
               transition: 'opacity 0.3s ease, transform 0.3s ease'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-              <span
-                style={{
-                  backgroundColor: colors.primary,
-                  color: '#ffffff',
-                  fontWeight: 800,
-                  fontSize: '0.8rem',
-                  padding: '0.35rem 0.85rem',
-                  borderRadius: '6px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px'
-                }}
-              >
-                🔥 Destaque Principal
-              </span>
-              <span
-                style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                  backdropFilter: 'blur(4px)',
-                  color: '#ffffff',
-                  border: '1px solid rgba(255, 255, 255, 0.25)',
-                  fontWeight: 700,
-                  fontSize: '0.8rem',
-                  padding: '0.35rem 0.85rem',
-                  borderRadius: '6px',
-                  textTransform: 'uppercase'
-                }}
-              >
-                {currentPost.category}
-              </span>
-              {currentPost.rating && (
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
                 <span
                   style={{
-                    backgroundColor: '#10b981',
+                    backgroundColor: colors.primary,
                     color: '#ffffff',
-                    fontWeight: 700,
-                    fontSize: '0.85rem',
-                    padding: '0.3rem 0.65rem',
-                    borderRadius: '6px'
+                    fontWeight: 800,
+                    fontSize: '0.8rem',
+                    padding: '0.35rem 0.85rem',
+                    borderRadius: '6px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
                   }}
                 >
-                  ★ {currentPost.rating.toFixed(1)}
+                  🔥 Destaque Principal
                 </span>
-              )}
+                <span
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                    backdropFilter: 'blur(4px)',
+                    color: '#ffffff',
+                    border: '1px solid rgba(255, 255, 255, 0.25)',
+                    fontWeight: 700,
+                    fontSize: '0.8rem',
+                    padding: '0.35rem 0.85rem',
+                    borderRadius: '6px',
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  {currentPost.category}
+                </span>
+                {currentPost.rating && (
+                  <span
+                    style={{
+                      backgroundColor: '#10b981',
+                      color: '#ffffff',
+                      fontWeight: 700,
+                      fontSize: '0.85rem',
+                      padding: '0.3rem 0.65rem',
+                      borderRadius: '6px'
+                    }}
+                  >
+                    ★ {currentPost.rating.toFixed(1)}
+                  </span>
+                )}
+              </div>
+
+              <h2
+                style={{
+                  fontSize: '2rem',
+                  fontWeight: 900,
+                  color: '#ffffff',
+                  lineHeight: 1.25,
+                  marginBottom: '0.5rem',
+                  maxWidth: '850px',
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,         /* Trava o título em no máximo 2 linhas */
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden'
+                }}
+              >
+                {currentPost.title}
+              </h2>
+
+              <p
+                style={{
+                  color: '#e2e8f0',
+                  fontSize: '1rem',
+                  fontWeight: 500,
+                  lineHeight: 1.5,
+                  maxWidth: '750px',
+                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3,         /* Trava rigorosamente em 3 linhas para igualar a altura */
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {currentPost.summary}
+              </p>
             </div>
 
-            <h2
-              style={{
-                fontSize: '2.2rem',
-                fontWeight: 900,
-                color: '#ffffff',
-                lineHeight: 1.25,
-                marginBottom: '0.75rem',
-                maxWidth: '850px',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)'
-              }}
-            >
-              {currentPost.title}
-            </h2>
-            <p
-              style={{
-                color: '#e2e8f0',
-                fontSize: '1.05rem',
-                fontWeight: 500,
-                lineHeight: 1.5,
-                marginBottom: '1.5rem',
-                maxWidth: '750px',
-                textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'
-              }}
-            >
-              {currentPost.summary}
-            </p>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', paddingTop: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: '#cbd5e1', fontSize: '0.875rem' }}>
                 <span>Por <strong style={{ color: '#ffffff' }}>{currentPost.author}</strong></span>
                 <span>•</span>
@@ -226,7 +239,7 @@ export const FeaturedHero: React.FC = () => {
                   color: '#ffffff',
                   fontWeight: 800,
                   fontSize: '0.9rem',
-                  padding: '0.75rem 1.5rem',
+                  padding: '0.65rem 1.25rem',
                   borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
