@@ -59,14 +59,6 @@ export const FeaturedHero: React.FC = () => {
     currentPost.category.toLowerCase().includes('analise') ||
     !!currentPost.benchmark;
 
-  // Gradiente suave no modo claro para destacar a imagem em cima e proteger o texto embaixo
-  const overlayBackground = mode === 'light'
-    ? 'linear-gradient(to top, rgba(255, 255, 255, 0.95) 30%, rgba(255, 255, 255, 0.65) 60%, rgba(255, 255, 255, 0.1) 100%)'
-    : 'linear-gradient(to top, rgba(15, 23, 42, 0.92) 20%, rgba(15, 23, 42, 0.6) 65%, rgba(15, 23, 42, 0.2) 100%)';
-
-  const textColor = mode === 'light' ? '#0f172a' : '#ffffff';
-  const textSecondaryColor = mode === 'light' ? '#334155' : '#cbd5e1';
-
   return (
     <div
       onMouseEnter={() => setIsPaused(true)}
@@ -88,14 +80,14 @@ export const FeaturedHero: React.FC = () => {
         <div
           className="hero-card"
           style={{
-            backgroundColor: mode === 'light' ? '#f8fafc' : '#0f172a',
+            backgroundColor: '#0f172a',
             border: mode === 'light' ? `1px solid ${colors.border}` : `1px solid ${colors.primary}`,
             boxShadow: mode === 'light'
-              ? '0 12px 30px rgba(0,0,0,0.08)'
+              ? '0 12px 30px rgba(0,0,0,0.12)'
               : `0 16px 36px rgba(0, 0, 0, 0.5), 0 0 25px ${colors.glow}`
           }}
         >
-          {/* Imagem cobrindo 100% do fundo */}
+          {/* Imagem de fundo cobrindo 100% do carrossel com o padrão escuro/cinematográfico */}
           <div
             className="hero-image-box"
             style={{
@@ -117,13 +109,10 @@ export const FeaturedHero: React.FC = () => {
                 }}
               />
             )}
-            <div
-              className="hero-overlay-gradient"
-              style={{ background: overlayBackground }}
-            />
+            <div className="hero-overlay-gradient" />
           </div>
 
-          {/* Conteúdo estruturado para empurrar o título/subtítulo para baixo */}
+          {/* Conteúdo com textos em branco e posicionamento inferior elegante em ambos os modos */}
           <div
             className="hero-content-box"
             style={{
@@ -132,7 +121,6 @@ export const FeaturedHero: React.FC = () => {
               transition: 'opacity 0.3s ease, transform 0.3s ease'
             }}
           >
-            {/* Topo: Tags (Destaque, Categoria, Nota) */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
               <span
                 style={{
@@ -150,10 +138,10 @@ export const FeaturedHero: React.FC = () => {
               </span>
               <span
                 style={{
-                  backgroundColor: mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.15)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
                   backdropFilter: 'blur(4px)',
-                  color: textColor,
-                  border: mode === 'light' ? '1px solid rgba(15, 23, 42, 0.15)' : '1px solid rgba(255, 255, 255, 0.25)',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
                   fontWeight: 700,
                   fontSize: '0.75rem',
                   padding: '0.3rem 0.75rem',
@@ -179,13 +167,12 @@ export const FeaturedHero: React.FC = () => {
               )}
             </div>
 
-            {/* Centro-Baixo: Título e Subtítulo posicionados mais para baixo */}
             <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
               <h2
                 style={{
                   fontSize: '1.85rem',
                   fontWeight: 900,
-                  color: textColor,
+                  color: '#ffffff',
                   lineHeight: 1.25,
                   marginBottom: '0.5rem',
                   maxWidth: '850px',
@@ -193,7 +180,7 @@ export const FeaturedHero: React.FC = () => {
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
-                  textShadow: mode === 'dark' ? '0 2px 4px rgba(0, 0, 0, 0.6)' : '0 1px 2px rgba(255, 255, 255, 0.9)'
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.6)'
                 }}
               >
                 {currentPost.title}
@@ -201,7 +188,7 @@ export const FeaturedHero: React.FC = () => {
 
               <p
                 style={{
-                  color: textSecondaryColor,
+                  color: '#cbd5e1',
                   fontSize: '1rem',
                   fontWeight: 500,
                   lineHeight: 1.5,
@@ -211,17 +198,16 @@ export const FeaturedHero: React.FC = () => {
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  textShadow: mode === 'dark' ? '0 1px 2px rgba(0, 0, 0, 0.6)' : '0 1px 1px rgba(255, 255, 255, 0.9)'
+                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.6)'
                 }}
               >
                 {currentPost.summary}
               </p>
             </div>
 
-            {/* Rodapé do Card: Autor, Data e Botão */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', paddingTop: '1.25rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: textSecondaryColor, fontSize: '0.875rem' }}>
-                <span>Por <strong style={{ color: textColor }}>{currentPost.author}</strong></span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: '#cbd5e1', fontSize: '0.875rem' }}>
+                <span>Por <strong style={{ color: '#ffffff' }}>{currentPost.author}</strong></span>
                 <span>•</span>
                 <span>{currentPost.date}</span>
               </div>
