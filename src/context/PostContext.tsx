@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Post } from '../types/game';
 
-// Variáveis de ambiente configuradas na Vercel para o Upstash Redis
 const KV_URL = import.meta.env.VITE_KV_URL;
 const KV_AUTH = import.meta.env.VITE_KV_AUTH;
 const STORAGE_KEY = 'sala_dos_jogos_posts_data';
@@ -51,7 +50,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const data = await response.json();
         
-        if (data && data.result) {
+        if (data && data.result !== undefined && data.result !== null) {
           const parsedPosts = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
           if (Array.isArray(parsedPosts)) {
             setPosts(parsedPosts);
@@ -65,10 +64,13 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
     fetchPostsFromKV();
   }, []);
 
-  // Função auxiliar para salvar a lista completa no Upstash Redis
+  // Função para salvar a lista completa no Upstash Redis com tratamento de erros visíveis
   const savePostsToKV = async (updatedPosts: Post[]) => {
     try {
-      if (!KV_URL || !KV_AUTH) return;
+      if (!KV_URL || !KV_AUTH) {
+        alert('Erro crítico: As variáveis VITE_KV_URL ou VITE_KV_AUTH não estão definidas.');
+        return;
+      }
 
       const response = await fetch(KV_URL, {
         method: 'POST',
@@ -80,17 +82,18 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       const data = await response.json();
+      
       if (data.error) {
-        console.error('Erro retornado pelo Upstash ao salvar:', data.error);
+        console.error('Erro retornado pelo Upstash:', data.error);
+        alert('Erro do Upstash ao guardar: ' + data.error);
       }
     } catch (err: any) {
       console.error('Falha de rede ao comunicar com o Upstash:', err);
+      alert('Falha de rede ao comunicar com a base de dados: ' + (err.message || 'Erro desconhecido'));
     }
   };
 
   const addPost = async (newPost: Post) => {
-    console.log("A tentar enviar para o Upstash...", newPost);
-    
     const postToAdd: Post = {
       ...newPost,
       id: newPost.id || crypto.randomUUID(),
@@ -99,18 +102,13 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
       imageUrl: newPost.imageUrl || '',
       category: normalizeCategory(newPost),
       author: newPost.author || 'Redação Nexus',
-      date: newPost.date || '19 de outubro de 2026'
+      date: newPost.date || '22 de outubro de 2026'
     };
 
-    try {
-      const updatedPosts = [postToAdd, ...posts];
-      setPosts(updatedPosts);
-      await savePostsToKV(updatedPosts);
-      alert('Matéria publicada e salva na nuvem com sucesso!');
-    } catch (err: any) {
-      console.error('Erro ao adicionar post:', err);
-      alert('Erro ao guardar a matéria.');
-    }
+    const updatedPosts = [postToAdd, ...posts];
+    setPosts(updatedPosts);
+    await savePostsToKV(updatedPosts);
+    alert('Matéria publicada e salva na nuvem com sucesso!');
   };
 
   const updatePost = async (updatedPost: Post) => {
