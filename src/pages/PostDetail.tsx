@@ -202,6 +202,9 @@ export const PostDetail: React.FC = () => {
   const fullText = post.content || post.summary || '';
   const rawParagraphs = fullText.split(/\r?\n/).map((p) => p.trim()).filter((p) => p.length > 0);
 
+  // Substitui automaticamente 'Redação Nexus' por 'Redação Sala dos Jogos' na matéria interna
+  const displayAuthor = (!post.author || post.author.includes('Nexus')) ? 'Redação Sala dos Jogos' : post.author;
+
   const isImageLine = (line: string) => {
     return Boolean(
       line.match(/^!\[(.*?)\]\((.*?)\)$/) ||
@@ -289,7 +292,7 @@ export const PostDetail: React.FC = () => {
           date={post.date}
           title={post.title}
           subtitle={post.subtitle}
-          author={post.author}
+          author={displayAuthor}
           imageUrl={post.imageUrl}
         />
 

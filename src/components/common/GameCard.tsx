@@ -14,6 +14,9 @@ export const GameCard: React.FC<GameCardProps> = ({ post }) => {
   const isAnalysis = post.category.toLowerCase() === 'análise' || post.category.toLowerCase() === 'review';
   const targetLink = `/post/${post.id}${isAnalysis ? '?from=reviews' : ''}`;
 
+  // Substitui automaticamente 'Redação Nexus' por 'Redação Sala dos Jogos'
+  const displayAuthor = (!post.author || post.author.includes('Nexus')) ? 'Redação Sala dos Jogos' : post.author;
+
   return (
     <Link
       to={targetLink}
@@ -40,7 +43,6 @@ export const GameCard: React.FC<GameCardProps> = ({ post }) => {
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'translateY(-4px)';
-          // Sombra limpa e neutra sem glow colorido
           e.currentTarget.style.boxShadow = mode === 'light'
             ? '0 12px 24px rgba(0,0,0,0.08)'
             : '0 12px 30px rgba(0,0,0,0.4)';
@@ -146,7 +148,7 @@ export const GameCard: React.FC<GameCardProps> = ({ post }) => {
               color: colors.textSecondary
             }}
           >
-            <span>Por {post.author}</span>
+            <span>Por {displayAuthor}</span>
             <span>{post.date}</span>
           </div>
         </div>
