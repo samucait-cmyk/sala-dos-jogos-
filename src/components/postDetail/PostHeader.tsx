@@ -32,7 +32,7 @@ export const PostHeader: React.FC<Props> = ({ category, rating, date, title, sub
         />
       </div>
 
-      <header style={{ marginBottom: '2rem', textAlign: 'center' }}>
+      <header style={{ marginBottom: '2rem', textAlign: 'center', width: '100%' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
           <span style={{
             padding: '0.3rem 0.8rem',
@@ -68,7 +68,12 @@ export const PostHeader: React.FC<Props> = ({ category, rating, date, title, sub
           fontWeight: 800,
           color: colors.text,
           lineHeight: 1.25,
-          marginBottom: '1rem'
+          marginBottom: '1rem',
+          width: '100%',
+          maxWidth: '100%',
+          overflowWrap: 'break-word',
+          wordBreak: 'normal',
+          whiteSpace: 'normal'
         }}>
           {title}
         </h1>
@@ -79,7 +84,11 @@ export const PostHeader: React.FC<Props> = ({ category, rating, date, title, sub
             color: colors.textSecondary,
             lineHeight: 1.6,
             margin: '0 auto 1.5rem auto',
-            maxWidth: '720px'
+            maxWidth: '720px',
+            width: '100%',
+            overflowWrap: 'break-word',
+            wordBreak: 'normal',
+            whiteSpace: 'normal'
           }}>
             {subtitle}
           </p>

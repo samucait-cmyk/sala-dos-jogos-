@@ -36,12 +36,20 @@ p, span, h1, h2, h3, h4, h5, h6, a, li, div, article, section {
   hyphens: manual;           /* Desativa hifenização automática forçada */
 }
 
-/* 2. Caso exista algum texto de teste continuo sem espaços, permite a quebra segura apenas nele */
+/* 2. Blindagem extra para subtítulos e descrições em qualquer página ou cartão */
+.post-subtitle, [class*="subtitle"], [class*="description"], header p, article header p {
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  max-width: 100% !important;
+}
+
+/* 3. Caso exista algum texto de teste continuo sem espaços, permite a quebra segura apenas nele */
 .force-break {
   word-break: break-all;
 }
 
-/* 3. Ajustes de cabeçalho e menu de navegação */
+/* 4. Ajustes de cabeçalho e menu de navegação */
 header, nav, .news-ticker, header a, header span, nav a {
   word-break: normal !important;
   white-space: nowrap;
@@ -54,7 +62,7 @@ header, nav, .news-ticker, header a, header span, nav a {
   max-width: 100%;
 }
 
-/* 4. Mídia e Toque Responsivo */
+/* 5. Mídia e Toque Responsivo */
 img, video, canvas, svg {
   max-width: 100%;
   height: auto;
