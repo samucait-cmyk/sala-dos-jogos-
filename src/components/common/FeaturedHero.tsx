@@ -12,6 +12,10 @@ export const FeaturedHero: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  // Estados para controlar o efeito de hover individual nas setas
+  const [isLeftHovered, setIsLeftHovered] = useState(false);
+  const [isRightHovered, setIsRightHovered] = useState(false);
+
   // Referência para gestos de toque (touch swipe) no mobile
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
@@ -271,7 +275,7 @@ export const FeaturedHero: React.FC = () => {
           </div>
         </Link>
 
-        {/* Setas de Navegação Laterais (Estilo Glassmorphism e Responsivas) */}
+        {/* Setas de Navegação Laterais: Padrão Glassmorphism | Hover com a Cor do Tema */}
         {featuredPosts.length > 1 && (
           <>
             {/* Seta Esquerda (Anterior) */}
@@ -281,20 +285,22 @@ export const FeaturedHero: React.FC = () => {
                 e.stopPropagation();
                 prevSlide();
               }}
+              onMouseEnter={() => setIsLeftHovered(true)}
+              onMouseLeave={() => setIsLeftHovered(false)}
               aria-label="Matéria Anterior"
               className="hero-arrow-btn hero-arrow-left"
               style={{
                 position: 'absolute',
                 top: '50%',
                 left: '20px',
-                transform: 'translateY(-50%)',
+                transform: isLeftHovered ? 'translateY(-50%) scale(1.12)' : 'translateY(-50%) scale(1)',
                 zIndex: 20,
                 width: '44px',
                 height: '44px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(15, 23, 42, 0.55)',
+                backgroundColor: isLeftHovered ? colors.primary : 'rgba(15, 23, 42, 0.55)',
                 backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                border: isLeftHovered ? `1px solid ${colors.primary}` : '1px solid rgba(255, 255, 255, 0.25)',
                 color: '#ffffff',
                 fontSize: '1.25rem',
                 display: 'flex',
@@ -302,7 +308,9 @@ export const FeaturedHero: React.FC = () => {
                 justifyContent: 'center',
                 cursor: 'pointer',
                 transition: 'all 0.25s ease',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                boxShadow: isLeftHovered
+                  ? `0 6px 18px ${colors.primary}66`
+                  : '0 4px 12px rgba(0,0,0,0.3)'
               }}
             >
               ❮
@@ -315,20 +323,22 @@ export const FeaturedHero: React.FC = () => {
                 e.stopPropagation();
                 nextSlide();
               }}
+              onMouseEnter={() => setIsRightHovered(true)}
+              onMouseLeave={() => setIsRightHovered(false)}
               aria-label="Próxima Matéria"
               className="hero-arrow-btn hero-arrow-right"
               style={{
                 position: 'absolute',
                 top: '50%',
                 right: '20px',
-                transform: 'translateY(-50%)',
+                transform: isRightHovered ? 'translateY(-50%) scale(1.12)' : 'translateY(-50%) scale(1)',
                 zIndex: 20,
                 width: '44px',
                 height: '44px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(15, 23, 42, 0.55)',
+                backgroundColor: isRightHovered ? colors.primary : 'rgba(15, 23, 42, 0.55)',
                 backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                border: isRightHovered ? `1px solid ${colors.primary}` : '1px solid rgba(255, 255, 255, 0.25)',
                 color: '#ffffff',
                 fontSize: '1.25rem',
                 display: 'flex',
@@ -336,7 +346,9 @@ export const FeaturedHero: React.FC = () => {
                 justifyContent: 'center',
                 cursor: 'pointer',
                 transition: 'all 0.25s ease',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                boxShadow: isRightHovered
+                  ? `0 6px 18px ${colors.primary}66`
+                  : '0 4px 12px rgba(0,0,0,0.3)'
               }}
             >
               ❯
