@@ -7,7 +7,7 @@ export interface PerformanceResult {
 
 /**
  * Motor Global de Performance e Simulador de Bancada
- * Calcula dinamicamente o desempenho de qualquer jogo sem cadastros manuais.
+ * Calcula dinamicamente o desempenho de qualquer jogo de forma única e automática.
  */
 export function calculateGamePerformance(
   gpu: string,
@@ -15,30 +15,32 @@ export function calculateGamePerformance(
   postTitle: string,
   benchmarkFps1440p?: number
 ): PerformanceResult {
-  const title = postTitle.toLowerCase().trim();
+  const cleanTitle = postTitle.toLowerCase().trim();
 
-  // 1. Extrai uma assinatura técnica matemática do título para criar variação única por jogo
-  let titleHash = 0;
-  for (let i = 0; i < title.length; i++) {
-    titleHash = (titleHash << 5) - titleHash + title.charCodeAt(i);
-    titleHash |= 0;
-  }
-  const positiveHash = Math.abs(titleHash);
-
-  // 2. Calcula o perfil de peso de otimização exclusivo do título (Entre 0.74x e 0.96x)
-  const gameWeightFactor = 0.74 + (positiveHash % 23) / 100;
-
-  // Classificação do selo de otimização com base na exigência do título
+  // 1. Extrai o peso real do jogo baseado nas palavras-chave do título (Engine/Pesos técnicos)
+  let gameWeightFactor = 0.85; // Padrão
   let optimizationLabel = 'Equilibrado (Padrão AAA)';
-  if (gameWeightFactor < 0.81) {
+
+  if (cleanTitle.includes('gears') || cleanTitle.includes('e-day') || cleanTitle.includes('unreal engine 5') || cleanTitle.includes('ray tracing')) {
+    gameWeightFactor = 0.72; // Jogo muito pesado (UE5 + Ray Tracing)
     optimizationLabel = 'Alta Exigência (Next-Gen / RT)';
-  } else if (gameWeightFactor < 0.89) {
+  } else if (cleanTitle.includes('rebirth') || cleanTitle.includes('final fantasy vii') || cleanTitle.includes('open world')) {
+    gameWeightFactor = 0.80; // Jogo exigente (Mundo denso)
     optimizationLabel = 'Exigente (Mundo Aberto)';
-  } else {
+  } else if (cleanTitle.includes('resonance') || cleanTitle.includes('indie') || cleanTitle.includes('remaster')) {
+    gameWeightFactor = 0.95; // Jogo otimizado / ação leve
     optimizationLabel = 'Otimizado (Alta Taxa de Quadros)';
+  } else {
+    // Para qualquer outro jogo futuro, usa o hash do título para criar uma variação única
+    let hash = 0;
+    for (let i = 0; i < cleanTitle.length; i++) {
+      hash = (hash << 5) - hash + cleanTitle.charCodeAt(i);
+      hash |= 0;
+    }
+    gameWeightFactor = 0.75 + (Math.abs(hash) % 20) / 100;
   }
 
-  // 3. Potência relativa da GPU selecionada pelo usuário
+  // 2. Potência da GPU
   let gpuMultiplier = 1.0;
   const upperGpu = gpu.toUpperCase();
 
@@ -50,10 +52,10 @@ export function calculateGamePerformance(
   else if (upperGpu.includes('4060') || upperGpu.includes('6600') || upperGpu.includes('3060')) gpuMultiplier = 0.82;
   else gpuMultiplier = 0.68;
 
-  // 4. Potência relativa da CPU selecionada (resolve o erro de variável não utilizada)
+  // 3. Potência da CPU
   let cpuMultiplier = 1.0;
   const upperCpu = cpu.toUpperCase();
-  
+
   if (upperCpu.includes('7800X3D') || upperCpu.includes('9800X3D') || upperCpu.includes('14900K') || upperCpu.includes('13900K')) {
     cpuMultiplier = 1.08;
   } else if (upperCpu.includes('7600') || upperCpu.includes('5700X') || upperCpu.includes('13600K') || upperCpu.includes('14600K')) {
@@ -62,12 +64,12 @@ export function calculateGamePerformance(
     cpuMultiplier = 0.92;
   }
 
-  // 5. Base de cálculo (Utiliza a prop do CMS se fornecida, ou a curva técnica calculada)
-  const base1440 = benchmarkFps1440p || Math.round(95 * gameWeightFactor);
-  const base1080 = Math.round(base1440 * 1.30);
-  const base4k = Math.round(base1440 * 0.60);
+  // 4. Se a matéria não passar um benchmark fixo, calcula o FPS dinâmico pela classe do jogo
+  const base1440 = benchmarkFps1440p ? benchmarkFps1440p : Math.round(110 * gameWeightFactor);
+  const base1080 = Math.round(base1440 * 1.32);
+  const base4k = Math.round(base1440 * 0.58);
 
-  // 6. Aplicação final da GPU e Processador
+  // 5. Cálculo Final
   const f1080 = Math.round(base1080 * gpuMultiplier * cpuMultiplier);
   const f1440 = Math.round(base1440 * gpuMultiplier * cpuMultiplier);
   const f4k = Math.round(base4k * gpuMultiplier * cpuMultiplier);
