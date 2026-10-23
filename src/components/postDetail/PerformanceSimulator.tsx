@@ -34,7 +34,6 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Filtra as opções completas baseadas no texto digitado
   const filteredGpus = VALID_GPUS.filter(gpu => 
     gpu.toLowerCase().includes(userGpu.toLowerCase())
   );
@@ -69,6 +68,7 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
     setHasSimulated(true);
   };
 
+  // Motor dinâmico que lê o título do jogo e calcula individualmente
   const fpsData = calculateGamePerformance(userGpu, userCpu, postTitle, benchmarkFps1440p);
   const { f1080, f1440, f4k, optimizationLabel } = fpsData;
 
@@ -126,7 +126,7 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <input
                 type="text"
-                placeholder="Ex: NVIDIA GeForce RTX 5090"
+                placeholder="Ex: AMD Radeon RX 9060 XT 16GB"
                 value={userGpu}
                 onChange={(e) => {
                   setUserGpu(e.target.value);
@@ -369,7 +369,7 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
               const pct = Math.min(100, Math.round((item.fps / item.max) * 100));
               return (
                 <div key={item.res} style={{ backgroundColor: colors.bg, padding: '1rem', borderRadius: '8px', border: `1px solid ${colors.cardBorder}` }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.55rem', fontSize: '0.875rem' }}>
                     <span style={{ color: colors.text, fontWeight: 'bold' }}>{item.res}</span>
                     <span style={{ color: colors.primary, fontWeight: '800', fontSize: '1.1rem' }}>{item.fps} FPS</span>
                   </div>
@@ -385,3 +385,5 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
     </section>
   );
 };
+
+export default PerformanceSimulator;
