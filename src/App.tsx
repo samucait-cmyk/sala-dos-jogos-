@@ -6,6 +6,8 @@ import { Reviews } from './pages/Reviews';
 import { Analises } from './pages/Analises';
 import { Guias } from './pages/Guias';
 import { PostDetail } from './pages/PostDetail';
+import { PoliticaPrivacidade } from './pages/PoliticaPrivacidade';
+import { Sobre } from './pages/Sobre';
 import { Login } from './pages/admin/Login';
 import { Dashboard } from './pages/admin/Dashboard';
 import { PostEditor } from './pages/admin/PostEditor';
@@ -22,6 +24,8 @@ export function App() {
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/analises" element={<Analises />} />
         <Route path="/guias" element={<Guias />} />
+        <Route path="/politica-de-privacidade" element={<PoliticaPrivacidade />} />
+        <Route path="/sobre" element={<Sobre />} />
 
         {/* Rotas Administrativas */}
         <Route path="/admin/login" element={<Login />} />

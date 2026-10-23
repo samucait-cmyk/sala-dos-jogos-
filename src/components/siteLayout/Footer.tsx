@@ -29,12 +29,15 @@ export const Footer: React.FC = () => {
       marginTop: 'auto'
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'center' }}>
-        {/* Navegação Principal */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', fontSize: '0.9rem' }}>
+        
+        {/* Navegação Principal + Páginas Institucionais (AdSense Ready) */}
+        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '2rem', fontSize: '0.9rem' }}>
           <Link to="/" style={{ color: '#94a3b8', textDecoration: 'none' }}>Início</Link>
           <Link to="/noticias" style={{ color: '#94a3b8', textDecoration: 'none' }}>Notícias</Link>
           <Link to="/reviews" style={{ color: '#94a3b8', textDecoration: 'none' }}>Reviews</Link>
           <Link to="/guias" style={{ color: '#94a3b8', textDecoration: 'none' }}>Guias</Link>
+          <Link to="/sobre" style={{ color: '#94a3b8', textDecoration: 'none' }}>Sobre</Link>
+          <Link to="/politica-de-privacidade" style={{ color: '#94a3b8', textDecoration: 'none' }}>Política de Privacidade</Link>
         </div>
 
         {/* E-mail de Contato Oficial */}
