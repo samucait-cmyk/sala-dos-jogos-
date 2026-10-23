@@ -50,15 +50,27 @@ export function calculateGamePerformance(
   else if (upperGpu.includes('4060') || upperGpu.includes('6600') || upperGpu.includes('3060')) gpuMultiplier = 0.82;
   else gpuMultiplier = 0.68;
 
-  // 4. Base de calculo (Utiliza a prop do CMS se fornecida, ou a curva técnica calculada)
+  // 4. Potência relativa da CPU selecionada (resolve o erro de variável não utilizada)
+  let cpuMultiplier = 1.0;
+  const upperCpu = cpu.toUpperCase();
+  
+  if (upperCpu.includes('7800X3D') || upperCpu.includes('9800X3D') || upperCpu.includes('14900K') || upperCpu.includes('13900K')) {
+    cpuMultiplier = 1.08;
+  } else if (upperCpu.includes('7600') || upperCpu.includes('5700X') || upperCpu.includes('13600K') || upperCpu.includes('14600K')) {
+    cpuMultiplier = 1.0;
+  } else if (upperCpu.length > 0) {
+    cpuMultiplier = 0.92;
+  }
+
+  // 5. Base de cálculo (Utiliza a prop do CMS se fornecida, ou a curva técnica calculada)
   const base1440 = benchmarkFps1440p || Math.round(95 * gameWeightFactor);
   const base1080 = Math.round(base1440 * 1.30);
   const base4k = Math.round(base1440 * 0.60);
 
-  // 5. Aplicação final da GPU e Processador
-  const f1080 = Math.round(base1080 * gpuMultiplier);
-  const f1440 = Math.round(base1440 * gpuMultiplier);
-  const f4k = Math.round(base4k * gpuMultiplier);
+  // 6. Aplicação final da GPU e Processador
+  const f1080 = Math.round(base1080 * gpuMultiplier * cpuMultiplier);
+  const f1440 = Math.round(base1440 * gpuMultiplier * cpuMultiplier);
+  const f4k = Math.round(base4k * gpuMultiplier * cpuMultiplier);
 
   return {
     f1080: Math.max(30, f1080),
