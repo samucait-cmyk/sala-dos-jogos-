@@ -22,7 +22,7 @@ export const Login: React.FC = () => {
     setErrorMessage('⚠️ Por motivos de segurança, a colagem de texto não é permitida neste campo.');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
 
@@ -40,7 +40,8 @@ export const Login: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const result = login(sanitizedEmail, sanitizedPassword);
+      // Aguarda a resposta da API segura através do AuthContext
+      const result = await login(sanitizedEmail, sanitizedPassword);
 
       if (result.success) {
         // Limpa a palavra-passe da memória do componente imediatamente após o sucesso

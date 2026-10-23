@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useRef } from 'r
 import type { User, AuthState } from '../types/game';
 
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => { success: boolean; message?: string; requirePasswordUpdate?: boolean };
+  login: (email: string, password: string) => Promise<{ success: boolean; message?: string; requirePasswordUpdate?: boolean }>;
   logout: () => void;
   updatePassword: (newPassword: string) => void;
   failedAttempts: number;
@@ -98,51 +98,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, [auth.isAuthenticated]);
 
-  const login = (email: string, password: string) => {
+  const login = async (email: string, password: string) => {
     if (isLocked) {
       return { success: false, message: `Acesso bloqueado. Tente novamente em ${lockTimeRemaining}s.` };
     }
 
-    const adminEmailEnv = 'contato_saladosjogos@protonmail.com';
-    const adminPasswordEnv = 'ObitoUchiha@2026';
+    try {
+      // Chamada segura para a API Serverless na Vercel (oculta senhas do frontend/F12)
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const normalizedInputEmail = email.trim().toLowerCase();
-    const normalizedAdminEmail = adminEmailEnv.trim().toLowerCase();
+      const data = await response.json();
 
-    if (normalizedInputEmail === normalizedAdminEmail && password === adminPasswordEnv) {
-      const adminUser: User = {
-        id: '1',
-        name: 'Administrador Sala dos Jogos',
-        email: normalizedAdminEmail,
-        role: 'admin',
-      };
+      if (response.ok && data.success) {
+        setAuth({ user: data.user, isAuthenticated: true });
+        localStorage.setItem('@sala_jogos_user', JSON.stringify(data.user));
+        localStorage.setItem('@nexus_user', JSON.stringify(data.user));
+        setFailedAttempts(0);
+        setNeedsPasswordUpdate(false);
+        return { success: true };
+      }
 
-      setAuth({ user: adminUser, isAuthenticated: true });
-      localStorage.setItem('@sala_jogos_user', JSON.stringify(adminUser));
-      localStorage.setItem('@nexus_user', JSON.stringify(adminUser));
-      setFailedAttempts(0);
-      setNeedsPasswordUpdate(false);
+      const nextAttempts = failedAttempts + 1;
+      setFailedAttempts(nextAttempts);
+      const remaining = MAX_FAILED_ATTEMPTS - nextAttempts;
 
-      return { success: true };
-    }
+      if (nextAttempts >= MAX_FAILED_ATTEMPTS) {
+        setIsLocked(true);
+        setLockTimeRemaining(LOCK_TIME_SECONDS);
+        return {
+          success: false,
+          message: `Muitas tentativas incorretas. Formulário bloqueado por ${LOCK_TIME_SECONDS} segundos.`
+        };
+      }
 
-    const nextAttempts = failedAttempts + 1;
-    setFailedAttempts(nextAttempts);
-    const remaining = MAX_FAILED_ATTEMPTS - nextAttempts;
-
-    if (nextAttempts >= MAX_FAILED_ATTEMPTS) {
-      setIsLocked(true);
-      setLockTimeRemaining(LOCK_TIME_SECONDS);
       return {
         success: false,
-        message: `Muitas tentativas incorretas. Formulário bloqueado por ${LOCK_TIME_SECONDS} segundos.`
+        message: data.message || `Credenciais inválidas. Restam ${remaining} tentativa(s).`
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Erro de conexão com o servidor de autenticação.'
       };
     }
-
-    return {
-      success: false,
-      message: `Credenciais inválidas. Restam ${remaining} tentativa(s).`
-    };
   };
 
   const updatePassword = (newPassword: string) => {
