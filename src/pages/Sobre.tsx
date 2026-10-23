@@ -2,55 +2,55 @@ import { Gamepad2, Cpu, Rocket } from 'lucide-react';
 
 export function Sobre() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto bg-slate-900/80 border border-slate-800 rounded-3xl p-8 sm:p-12 shadow-2xl backdrop-blur-md">
+    <div style={{ minHeight: '100vh', backgroundColor: '#020617', color: '#f8fafc', padding: '4rem 1.5rem' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto', backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '1.5rem', padding: '3rem 2.5rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
         
         {/* Cabeçalho */}
-        <div className="flex items-center gap-4 mb-10 border-b border-slate-800 pb-6">
-          <div className="p-3 bg-indigo-600/20 text-indigo-400 rounded-2xl flex-shrink-0">
-            <Gamepad2 className="w-8 h-8" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2.5rem', borderBottom: '1px solid #1e293b', paddingBottom: '1.5rem' }}>
+          <div style={{ padding: '0.75rem', backgroundColor: 'rgba(79, 70, 229, 0.2)', color: '#818cf8', borderRadius: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Gamepad2 style={{ width: '32px', height: '32px' }} />
           </div>
           <div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">Sobre a Sala dos Jogos</h1>
-            <p className="text-sm sm:text-base text-slate-400 mt-1">O seu portal definitivo de games, análises e tecnologia</p>
+            <h1 style={{ fontSize: '2.25rem', fontWeight: '800', color: '#ffffff', margin: 0 }}>Sobre a Sala dos Jogos</h1>
+            <p style={{ fontSize: '1rem', color: '#94a3b8', margin: '0.25rem 0 0 0' }}>O seu portal definitivo de games, análises e tecnologia</p>
           </div>
         </div>
 
         {/* Conteúdo */}
-        <div className="space-y-10 text-slate-300 leading-relaxed text-base sm:text-lg">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', color: '#cbd5e1', fontSize: '1.1rem', lineHeight: '1.8' }}>
           
-          <section className="space-y-3">
-            <h2 className="text-2xl font-bold text-white tracking-tight">Nossa Missão</h2>
-            <p className="text-slate-300">
+          <div>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.75rem' }}>Nossa Missão</h2>
+            <p style={{ margin: 0 }}>
               A <strong>Sala dos Jogos</strong> nasceu com um propósito claro: entregar conteúdo de alta qualidade, análises profundas, guias detalhados e as principais novidades do universo dos videogames e hardware para a comunidade de jogadores.
             </p>
-          </section>
+          </div>
 
           {/* Grid de Destaques */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-            <div className="bg-slate-800/50 border border-slate-700/50 p-6 rounded-2xl space-y-3 transition hover:border-indigo-500/50">
-              <Gamepad2 className="w-7 h-7 text-indigo-400" />
-              <h3 className="font-bold text-white text-lg">Análises Reais</h3>
-              <p className="text-sm text-slate-400">Reviews focados na experiência de gameplay, desempenho e enredo.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', margin: '1rem 0' }}>
+            <div style={{ backgroundColor: '#1e293b', border: '1px solid #334155', padding: '1.5rem', borderRadius: '1rem' }}>
+              <Gamepad2 style={{ width: '28px', height: '28px', color: '#818cf8', marginBottom: '0.75rem' }} />
+              <h3 style={{ fontWeight: '700', color: '#ffffff', fontSize: '1.1rem', margin: '0 0 0.5rem 0' }}>Análises Reais</h3>
+              <p style={{ fontSize: '0.95rem', color: '#94a3b8', margin: 0 }}>Reviews focados na experiência de gameplay, desempenho e enredo.</p>
             </div>
-            <div className="bg-slate-800/50 border border-slate-700/50 p-6 rounded-2xl space-y-3 transition hover:border-indigo-500/50">
-              <Cpu className="w-7 h-7 text-indigo-400" />
-              <h3 className="font-bold text-white text-lg">Tecnologia & Hardware</h3>
-              <p className="text-sm text-slate-400">Dicas de otimização, configurações de desempenho e ecossistema PC.</p>
+            <div style={{ backgroundColor: '#1e293b', border: '1px solid #334155', padding: '1.5rem', borderRadius: '1rem' }}>
+              <Cpu style={{ width: '28px', height: '28px', color: '#818cf8', marginBottom: '0.75rem' }} />
+              <h3 style={{ fontWeight: '700', color: '#ffffff', fontSize: '1.1rem', margin: '0 0 0.5rem 0' }}>Tecnologia & Hardware</h3>
+              <p style={{ fontSize: '0.95rem', color: '#94a3b8', margin: 0 }}>Dicas de otimização, configurações de desempenho e ecossistema PC.</p>
             </div>
-            <div className="bg-slate-800/50 border border-slate-700/50 p-6 rounded-2xl space-y-3 transition hover:border-indigo-500/50">
-              <Rocket className="w-7 h-7 text-indigo-400" />
-              <h3 className="font-bold text-white text-lg">Inovação Constante</h3>
-              <p className="text-sm text-slate-400">Plataforma rápida, moderna e desenvolvida com foco total na usabilidade.</p>
+            <div style={{ backgroundColor: '#1e293b', border: '1px solid #334155', padding: '1.5rem', borderRadius: '1rem' }}>
+              <Rocket style={{ width: '28px', height: '28px', color: '#818cf8', marginBottom: '0.75rem' }} />
+              <h3 style={{ fontWeight: '700', color: '#ffffff', fontSize: '1.1rem', margin: '0 0 0.5rem 0' }}>Inovação Constante</h3>
+              <p style={{ fontSize: '0.95rem', color: '#94a3b8', margin: 0 }}>Plataforma rápida, moderna e desenvolvida com foco total na usabilidade.</p>
             </div>
           </div>
 
-          <section className="space-y-3">
-            <h2 className="text-2xl font-bold text-white tracking-tight">Por que acompanhar a Sala dos Jogos?</h2>
-            <p className="text-slate-300">
+          <div>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.75rem' }}>Por que acompanhar a Sala dos Jogos?</h2>
+            <p style={{ margin: 0 }}>
               Nosso compromisso é com a clareza, a paixão pelos jogos e a imparcialidade. Seja para descobrir o próximo grande lançamento, encontrar o guia perfeito para zerar aquela fase difícil ou entender as novidades do mercado tecnológico, a Sala dos Jogos é o seu ponto de encontro.
             </p>
-          </section>
+          </div>
 
         </div>
       </div>
