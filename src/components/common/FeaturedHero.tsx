@@ -169,8 +169,7 @@ export const FeaturedHero: React.FC = () => {
                   padding: '0.3rem 0.75rem',
                   borderRadius: '6px',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                  transition: 'background-color 0.3s ease'
+                  letterSpacing: '0.5px'
                 }}
               >
                 🔥 Destaque Principal
@@ -262,8 +261,7 @@ export const FeaturedHero: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  boxShadow: `0 4px 14px ${colors.primary}55`,
-                  transition: 'background-color 0.3s ease'
+                  boxShadow: `0 4px 14px ${colors.primary}55`
                 }}
               >
                 <span>Ler Matéria Completa</span>
@@ -273,7 +271,7 @@ export const FeaturedHero: React.FC = () => {
           </div>
         </Link>
 
-        {/* Setas de Navegação Laterais Dinâmicas vinculadas a `colors.primary` */}
+        {/* Setas de Navegação Laterais (Estilo Glassmorphism e Responsivas) */}
         {featuredPosts.length > 1 && (
           <>
             {/* Seta Esquerda (Anterior) */}
@@ -294,16 +292,17 @@ export const FeaturedHero: React.FC = () => {
                 width: '44px',
                 height: '44px',
                 borderRadius: '50%',
-                backgroundColor: colors.primary,
-                border: '1px solid rgba(255, 255, 255, 0.3)',
+                backgroundColor: 'rgba(15, 23, 42, 0.55)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
                 color: '#ffffff',
                 fontSize: '1.25rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: `0 4px 14px ${colors.primary}66`
+                transition: 'all 0.25s ease',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
               }}
             >
               ❮
@@ -327,16 +326,17 @@ export const FeaturedHero: React.FC = () => {
                 width: '44px',
                 height: '44px',
                 borderRadius: '50%',
-                backgroundColor: colors.primary,
-                border: '1px solid rgba(255, 255, 255, 0.3)',
+                backgroundColor: 'rgba(15, 23, 42, 0.55)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
                 color: '#ffffff',
                 fontSize: '1.25rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: `0 4px 14px ${colors.primary}66`
+                transition: 'all 0.25s ease',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
               }}
             >
               ❯
