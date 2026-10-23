@@ -103,19 +103,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, message: `Acesso bloqueado. Tente novamente em ${lockTimeRemaining}s.` };
     }
 
-    // Credenciais oficiais validadas
     const adminEmailEnv = 'contato_saladosjogos@protonmail.com';
     const adminPasswordEnv = 'ObitoUchiha@2026';
 
     const normalizedInputEmail = email.trim().toLowerCase();
     const normalizedAdminEmail = adminEmailEnv.trim().toLowerCase();
-
-    // Log para depuração direta no Console do navegador (F12)
-    console.log('Tentativa de Login:', { 
-      digitadoEmail: normalizedInputEmail, 
-      esperadoEmail: normalizedAdminEmail, 
-      senhaCorreta: password === adminPasswordEnv 
-    });
 
     if (normalizedInputEmail === normalizedAdminEmail && password === adminPasswordEnv) {
       const adminUser: User = {
@@ -163,6 +155,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAuth({ user: null, isAuthenticated: false });
     localStorage.removeItem('@sala_jogos_user');
     localStorage.removeItem('@nexus_user');
+    window.location.href = '/'; // Redirecionamento limpo e infalível para a Home pública
   };
 
   return (
