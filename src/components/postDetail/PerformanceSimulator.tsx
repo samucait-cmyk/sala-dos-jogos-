@@ -18,6 +18,10 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
   const [showGpuSuggestions, setShowGpuSuggestions] = useState(false);
   const [showCpuSuggestions, setShowCpuSuggestions] = useState(false);
 
+  // Estados para navegação por teclado (Setas e Enter)
+  const [gpuSelectedIndex, setGpuSelectedIndex] = useState(-1);
+  const [cpuSelectedIndex, setCpuSelectedIndex] = useState(-1);
+
   const gpuRef = useRef<HTMLDivElement>(null);
   const cpuRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +45,48 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
   const filteredCpus = VALID_CPUS.filter(cpu => 
     cpu.toLowerCase().includes(userCpu.toLowerCase())
   );
+
+  // Manipulação de teclas para a GPU (Setas e Enter)
+  const handleGpuKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showGpuSuggestions || filteredGpus.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setGpuSelectedIndex(prev => (prev < filteredGpus.length - 1 ? prev + 1 : 0));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setGpuSelectedIndex(prev => (prev > 0 ? prev - 1 : filteredGpus.length - 1));
+    } else if (e.key === 'Enter' && gpuSelectedIndex >= 0 && gpuSelectedIndex < filteredGpus.length) {
+      e.preventDefault();
+      setUserGpu(filteredGpus[gpuSelectedIndex]);
+      setShowGpuSuggestions(false);
+      setGpuSelectedIndex(-1);
+      if (simulationError.gpu) setSimulationError({ ...simulationError, gpu: undefined });
+    } else if (e.key === 'Escape') {
+      setShowGpuSuggestions(false);
+    }
+  };
+
+  // Manipulação de teclas para a CPU (Setas e Enter)
+  const handleCpuKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showCpuSuggestions || filteredCpus.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setCpuSelectedIndex(prev => (prev < filteredCpus.length - 1 ? prev + 1 : 0));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setCpuSelectedIndex(prev => (prev > 0 ? prev - 1 : filteredCpus.length - 1));
+    } else if (e.key === 'Enter' && cpuSelectedIndex >= 0 && cpuSelectedIndex < filteredCpus.length) {
+      e.preventDefault();
+      setUserCpu(filteredCpus[cpuSelectedIndex]);
+      setShowCpuSuggestions(false);
+      setCpuSelectedIndex(-1);
+      if (simulationError.cpu) setSimulationError({ ...simulationError, cpu: undefined });
+    } else if (e.key === 'Escape') {
+      setShowCpuSuggestions(false);
+    }
+  };
 
   const handleRunSimulation = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +114,6 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
     setHasSimulated(true);
   };
 
-  // Motor dinâmico que lê o título do jogo e calcula individualmente
   const fpsData = calculateGamePerformance(userGpu, userCpu, postTitle, benchmarkFps1440p);
   const { f1080, f1440, f4k, optimizationLabel } = fpsData;
 
@@ -104,7 +149,7 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
       </div>
 
       <p style={{ margin: '0 0 1.25rem 0', fontSize: '0.9rem', color: colors.textSecondary, lineHeight: 1.5 }}>
-        Insira a placa de vídeo e o processador ou navegue pelas opções com a seta e clique em <strong>Validar e Simular Desempenho</strong> para calcular os dados de referência para <strong>{postTitle}</strong>.
+        Insira a placa de vídeo e o processador (use as setas do teclado para navegar nas opções) e clique em <strong>Validar e Simular Desempenho</strong> para calcular os dados de referência para <strong>{postTitle}</strong>.
       </p>
 
       <form onSubmit={handleRunSimulation}>
@@ -126,14 +171,16 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <input
                 type="text"
-                placeholder="Ex: AMD Radeon RX 9060 XT 16GB"
+                placeholder="Ex: NVIDIA GeForce RTX 5090"
                 value={userGpu}
                 onChange={(e) => {
                   setUserGpu(e.target.value);
                   setShowGpuSuggestions(true);
+                  setGpuSelectedIndex(-1);
                   if (simulationError.gpu) setSimulationError({ ...simulationError, gpu: undefined });
                 }}
                 onFocus={() => setShowGpuSuggestions(true)}
+                onKeyDown={handleGpuKeyDown}
                 style={{
                   width: '100%',
                   padding: '0.7rem 2.25rem 0.7rem 0.7rem',
@@ -189,12 +236,13 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
                 zIndex: 99,
                 boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
               }}>
-                {filteredGpus.map((gpu) => (
+                {filteredGpus.map((gpu, idx) => (
                   <li
                     key={gpu}
                     onClick={() => {
                       setUserGpu(gpu);
                       setShowGpuSuggestions(false);
+                      setGpuSelectedIndex(-1);
                       if (simulationError.gpu) setSimulationError({ ...simulationError, gpu: undefined });
                     }}
                     style={{
@@ -202,10 +250,10 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
                       fontSize: '0.85rem',
                       color: colors.text,
                       cursor: 'pointer',
+                      backgroundColor: idx === gpuSelectedIndex ? colors.primary + '33' : 'transparent',
                       borderBottom: `1px solid ${colors.cardBorder}`
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.bg}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    onMouseEnter={() => setGpuSelectedIndex(idx)}
                   >
                     {gpu}
                   </li>
@@ -222,14 +270,16 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <input
                 type="text"
-                placeholder="Ex: AMD Ryzen 5 7600"
+                placeholder="Ex: AMD Ryzen 7 9800X3D"
                 value={userCpu}
                 onChange={(e) => {
                   setUserCpu(e.target.value);
                   setShowCpuSuggestions(true);
+                  setCpuSelectedIndex(-1);
                   if (simulationError.cpu) setSimulationError({ ...simulationError, cpu: undefined });
                 }}
                 onFocus={() => setShowCpuSuggestions(true)}
+                onKeyDown={handleCpuKeyDown}
                 style={{
                   width: '100%',
                   padding: '0.7rem 2.25rem 0.7rem 0.7rem',
@@ -285,12 +335,13 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
                 zIndex: 99,
                 boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
               }}>
-                {filteredCpus.map((cpu) => (
+                {filteredCpus.map((cpu, idx) => (
                   <li
                     key={cpu}
                     onClick={() => {
                       setUserCpu(cpu);
                       setShowCpuSuggestions(false);
+                      setCpuSelectedIndex(-1);
                       if (simulationError.cpu) setSimulationError({ ...simulationError, cpu: undefined });
                     }}
                     style={{
@@ -298,10 +349,10 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
                       fontSize: '0.85rem',
                       color: colors.text,
                       cursor: 'pointer',
+                      backgroundColor: idx === cpuSelectedIndex ? colors.primary + '33' : 'transparent',
                       borderBottom: `1px solid ${colors.cardBorder}`
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.bg}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    onMouseEnter={() => setCpuSelectedIndex(idx)}
                   >
                     {cpu}
                   </li>
@@ -362,9 +413,9 @@ export const PerformanceSimulator: React.FC<Props> = ({ postTitle, benchmarkFps1
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {[
-              { res: '1080p Full HD', fps: f1080, max: 240 },
-              { res: '1440p Quad HD', fps: f1440, max: 200 },
-              { res: '2160p 4K Ultra HD', fps: f4k, max: 140 }
+              { res: '1080p Full HD', fps: f1080, max: 350 },
+              { res: '1440p Quad HD', fps: f1440, max: 300 },
+              { res: '2160p 4K Ultra HD', fps: f4k, max: 200 }
             ].map((item) => {
               const pct = Math.min(100, Math.round((item.fps / item.max) * 100));
               return (
