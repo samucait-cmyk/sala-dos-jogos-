@@ -7,7 +7,7 @@ export function Sobre() {
         
         {/* Cabeçalho */}
         <div className="flex items-center space-x-4 mb-8 border-b border-slate-800 pb-6">
-          <div className="p-3 bg-indigo-600/20 text-indigo-400 rounded-xl">
+          <div className="p-3 bg-indigo-600/20 text-indigo-400 rounded-xl flex-shrink-0">
             <Gamepad2 className="w-8 h-8" />
           </div>
           <div>
@@ -18,7 +18,6 @@ export function Sobre() {
 
         {/* Conteúdo */}
         <div className="space-y-8 text-slate-300 leading-relaxed">
-          
           <section className="space-y-3">
             <h2 className="text-2xl font-bold text-white tracking-tight">Nossa Missão</h2>
             <p>
@@ -51,8 +50,8 @@ export function Sobre() {
               Nosso compromisso é com a clareza, a paixão pelos jogos e a imparcialidade. Seja para descobrir o próximo grande lançamento, encontrar o guia perfeito para zerar aquela fase difícil ou entender as novidades do mercado tecnológico, a Sala dos Jogos é o seu ponto de encontro.
             </p>
           </section>
-
         </div>
+
       </div>
     </div>
   );

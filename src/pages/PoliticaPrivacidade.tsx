@@ -7,7 +7,7 @@ export function PoliticaPrivacidade() {
         
         {/* Cabeçalho */}
         <div className="flex items-center space-x-4 mb-8 border-b border-slate-800 pb-6">
-          <div className="p-3 bg-indigo-600/20 text-indigo-400 rounded-xl">
+          <div className="p-3 bg-indigo-600/20 text-indigo-400 rounded-xl flex-shrink-0">
             <Shield className="w-8 h-8" />
           </div>
           <div>
@@ -18,10 +18,9 @@ export function PoliticaPrivacidade() {
 
         {/* Conteúdo */}
         <div className="space-y-8 text-slate-300 leading-relaxed">
-          
           <section className="space-y-3">
             <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-              <Eye className="w-5 h-5 text-indigo-400" /> 1. Introdução e Compromisso com a Privacidade
+              <Eye className="w-5 h-5 text-indigo-400 flex-shrink-0" /> 1. Introdução e Compromisso com a Privacidade
             </h2>
             <p>
               A <strong>Sala dos Jogos</strong> valoriza profundamente a privacidade dos seus visitantes. Esta Política de Privacidade descreve de forma clara e transparente como coletamos, usamos e protegemos as informações quando você navega pelo nosso portal de notícias, análises e guias de jogos.
@@ -30,7 +29,7 @@ export function PoliticaPrivacidade() {
 
           <section className="space-y-3">
             <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-              <Server className="w-5 h-5 text-indigo-400" /> 2. Coleta de Dados e Análise de Tráfego
+              <Server className="w-5 h-5 text-indigo-400 flex-shrink-0" /> 2. Coleta de Dados e Análise de Tráfego
             </h2>
             <p>
               Utilizamos ferramentas modernas de análise de desempenho e tráfego (como o Vercel Analytics) para monitorar visualizações de páginas e tendências de acesso de forma totalmente anônima. 
@@ -44,7 +43,7 @@ export function PoliticaPrivacidade() {
 
           <section className="space-y-3">
             <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-              <Lock className="w-5 h-5 text-indigo-400" /> 3. Segurança da Informação
+              <Lock className="w-5 h-5 text-indigo-400 flex-shrink-0" /> 3. Segurança da Informação
             </h2>
             <p>
               Adotamos padrões rígidos de segurança em nossa infraestrutura, incluindo criptografia em trânsito (HTTPS), autenticação protegida por arquitetura serverless e políticas rigorosas de controle de acesso para garantir que o portal opere em ambiente seguro contra acessos não autorizados.
@@ -64,8 +63,8 @@ export function PoliticaPrivacidade() {
               Se tiver dúvidas sobre esta Política de Privacidade ou sobre as práticas do site, entre em contato conosco através dos canais oficiais disponíveis no portal.
             </p>
           </section>
-
         </div>
+
       </div>
     </div>
   );
