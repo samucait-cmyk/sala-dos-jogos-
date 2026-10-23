@@ -59,18 +59,13 @@ export const FeaturedHero: React.FC = () => {
     currentPost.category.toLowerCase().includes('analise') ||
     !!currentPost.benchmark;
 
-  // Substitui automaticamente 'Redação Nexus' por 'Redação Sala dos Jogos'
   const displayAuthor = (!currentPost.author || currentPost.author.includes('Nexus')) ? 'Redação Sala dos Jogos' : currentPost.author;
 
   return (
     <div
+      className="hero-wrapper"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      style={{
-        position: 'relative',
-        width: '100%',
-        marginBottom: '3.5rem'
-      }}
     >
       <Link
         to={`/post/${currentPost.id}${isReview ? '?from=reviews' : ''}`}
@@ -84,13 +79,14 @@ export const FeaturedHero: React.FC = () => {
           className="hero-card"
           style={{
             backgroundColor: '#0f172a',
-            border: mode === 'light' ? `1px solid ${colors.border}` : `1px solid ${colors.primary}`,
+            borderTop: mode === 'light' ? `1px solid ${colors.border}` : `1px solid ${colors.primary}`,
+            borderBottom: mode === 'light' ? `1px solid ${colors.border}` : `1px solid ${colors.primary}`,
             boxShadow: mode === 'light'
-              ? '0 12px 30px rgba(0,0,0,0.12)'
+              ? '0 8px 24px rgba(0,0,0,0.06)'
               : `0 16px 36px rgba(0, 0, 0, 0.5), 0 0 25px ${colors.glow}`
           }}
         >
-          {/* Imagem de fundo cobrindo 100% do carrossel com o padrão escuro/cinematográfico */}
+          {/* Imagem de Fundo Imersiva */}
           <div
             className="hero-image-box"
             style={{
@@ -115,7 +111,7 @@ export const FeaturedHero: React.FC = () => {
             <div className="hero-overlay-gradient" />
           </div>
 
-          {/* Conteúdo com textos em branco e posicionamento inferior elegante em ambos os modos */}
+          {/* Conteúdo do Card */}
           <div
             className="hero-content-box"
             style={{
@@ -244,7 +240,8 @@ export const FeaturedHero: React.FC = () => {
           flexDirection: 'column',
           alignItems: 'center',
           gap: '0.75rem',
-          marginTop: '1.25rem'
+          marginTop: '1.25rem',
+          padding: '0 1rem'
         }}
       >
         <div
