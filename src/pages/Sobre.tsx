@@ -1,6 +1,11 @@
+import { useEffect } from 'react';
 import { Gamepad2, Cpu, Rocket } from 'lucide-react';
 
 export function Sobre() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#020617', color: '#f8fafc', padding: '4rem 1.5rem' }}>
       <div style={{ maxWidth: '900px', margin: '0 auto', backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '1.5rem', padding: '3rem 2.5rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
