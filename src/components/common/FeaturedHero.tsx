@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { usePosts } from '../../context/PostContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -11,6 +11,10 @@ export const FeaturedHero: React.FC = () => {
   const [isFading, setIsFading] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
+
+  // Referência para gestos de toque (touch swipe) no mobile
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
   const featuredPosts = posts.slice(0, 5);
   const DURATION = 6000;
@@ -41,6 +45,15 @@ export const FeaturedHero: React.FC = () => {
     }, 250);
   };
 
+  const prevSlide = () => {
+    setIsFading(true);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev - 1 + featuredPosts.length) % featuredPosts.length);
+      setIsFading(false);
+      setProgress(0);
+    }, 250);
+  };
+
   const goToSlide = (index: number) => {
     if (index === currentIndex) return;
     setIsFading(true);
@@ -49,6 +62,31 @@ export const FeaturedHero: React.FC = () => {
       setIsFading(false);
       setProgress(0);
     }, 250);
+  };
+
+  // Suporte a gestos no mobile (Swipe)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      nextSlide();
+    } else if (isRightSwipe) {
+      prevSlide();
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
   };
 
   if (featuredPosts.length === 0) return null;
@@ -66,27 +104,28 @@ export const FeaturedHero: React.FC = () => {
       className="hero-wrapper"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      style={{ position: 'relative' }}
     >
-      <Link
-        to={`/post/${currentPost.id}${isReview ? '?from=reviews' : ''}`}
+      <div
+        className="hero-card"
         style={{
-          display: 'block',
-          textDecoration: 'none',
-          color: 'inherit'
+          backgroundColor: '#0f172a',
+          borderTop: mode === 'light' ? `1px solid ${colors.border}` : `1px solid ${colors.primary}`,
+          borderBottom: mode === 'light' ? `1px solid ${colors.border}` : `1px solid ${colors.primary}`,
+          boxShadow: mode === 'light'
+            ? '0 8px 24px rgba(0,0,0,0.06)'
+            : `0 16px 36px rgba(0, 0, 0, 0.5), 0 0 25px ${colors.glow}`
         }}
       >
-        <div
-          className="hero-card"
-          style={{
-            backgroundColor: '#0f172a',
-            borderTop: mode === 'light' ? `1px solid ${colors.border}` : `1px solid ${colors.primary}`,
-            borderBottom: mode === 'light' ? `1px solid ${colors.border}` : `1px solid ${colors.primary}`,
-            boxShadow: mode === 'light'
-              ? '0 8px 24px rgba(0,0,0,0.06)'
-              : `0 16px 36px rgba(0, 0, 0, 0.5), 0 0 25px ${colors.glow}`
-          }}
+        {/* Link Envolvente para a Matéria */}
+        <Link
+          to={`/post/${currentPost.id}${isReview ? '?from=reviews' : ''}`}
+          style={{ display: 'block', height: '100%', textDecoration: 'none', color: 'inherit' }}
         >
-          {/* Imagem de Fundo Imersiva */}
+          {/* Imagem de Fundo */}
           <div
             className="hero-image-box"
             style={{
@@ -230,10 +269,83 @@ export const FeaturedHero: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
-      </Link>
+        </Link>
 
-      {/* Timer Visual e Indicadores */}
+        {/* Setas de Navegação Laterais (Estilo Glassmorphism e Responsivas) */}
+        {featuredPosts.length > 1 && (
+          <>
+            {/* Seta Esquerda (Anterior) */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                prevSlide();
+              }}
+              aria-label="Matéria Anterior"
+              className="hero-arrow-btn hero-arrow-left"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '20px',
+                transform: 'translateY(-50%)',
+                zIndex: 20,
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(15, 23, 42, 0.55)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#ffffff',
+                fontSize: '1.25rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+              }}
+            >
+              ❮
+            </button>
+
+            {/* Seta Direita (Próxima) */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                nextSlide();
+              }}
+              aria-label="Próxima Matéria"
+              className="hero-arrow-btn hero-arrow-right"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: '20px',
+                transform: 'translateY(-50%)',
+                zIndex: 20,
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(15, 23, 42, 0.55)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#ffffff',
+                fontSize: '1.25rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+              }}
+            >
+              ❯
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Timer Visual e Indicadores Embaixo */}
       <div
         style={{
           display: 'flex',
