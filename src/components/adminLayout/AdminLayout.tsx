@@ -13,8 +13,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const handleLogout = () => {
     logout();
-    // Ajustado para a rota real de login configurada no App.tsx
-    navigate('/admin/login', { replace: true });
+    // Redireciona diretamente para o início do site público ao terminar a sessão
+    navigate('/', { replace: true });
   };
 
   return (
