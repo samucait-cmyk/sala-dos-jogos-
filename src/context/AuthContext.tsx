@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
-import type { User, AuthState } from '../types/game';
+import type { AuthState } from '../types/game';
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<{ success: boolean; message?: string; requirePasswordUpdate?: boolean }>;
