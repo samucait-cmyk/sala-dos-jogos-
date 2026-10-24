@@ -3,6 +3,7 @@ import { MainLayout } from '../components/siteLayout/MainLayout';
 import { FeaturedHero } from '../components/common/FeaturedHero';
 import { FilterBar } from '../components/common/FilterBar';
 import { GameCard } from '../components/common/GameCard';
+import { Pagination } from '../components/common/Pagination';
 import { usePosts } from '../context/PostContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -12,6 +13,8 @@ export const Home: React.FC = () => {
 
   const [selectedCategory, setSelectedCategory] = useState('Todas');
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const CARDS_PER_PAGE = 12;
 
   const safePosts = posts || [];
 
@@ -39,6 +42,23 @@ export const Home: React.FC = () => {
     return matchesCategory && matchesSearch;
   });
 
+  // Cálculo da Paginação
+  const totalPages = Math.ceil(filteredPosts.length / CARDS_PER_PAGE);
+  const paginatedPosts = filteredPosts.slice(
+    (currentPage - 1) * CARDS_PER_PAGE,
+    currentPage * CARDS_PER_PAGE
+  );
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
+  };
+
   return (
     <MainLayout>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem' }}>
@@ -46,24 +66,32 @@ export const Home: React.FC = () => {
 
         <FilterBar
           selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
+          onSelectCategory={handleCategoryChange}
           searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
+          onSearchChange={handleSearchChange}
         />
 
-        {filteredPosts.length > 0 ? (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-              gap: '2rem',
-              marginTop: '2rem'
-            }}
-          >
-            {filteredPosts.map((post) => (
-              <GameCard key={post.id} post={post} />
-            ))}
-          </div>
+        {paginatedPosts.length > 0 ? (
+          <>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+                gap: '2rem',
+                marginTop: '2rem'
+              }}
+            >
+              {paginatedPosts.map((post) => (
+                <GameCard key={post.id} post={post} />
+              ))}
+            </div>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </>
         ) : (
           <div
             style={{
