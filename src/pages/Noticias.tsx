@@ -48,8 +48,21 @@ export const Noticias: React.FC = () => {
           </p>
         </div>
 
-        {/* Barra de Pesquisa Integrada */}
-        <div style={{ maxWidth: '600px', margin: '0 auto 2.5rem auto' }}>
+        {/* Campo de Pesquisa Estilizado com Lupa (Idêntico à Home) */}
+        <div style={{ maxWidth: '600px', margin: '0 auto 2.5rem auto', position: 'relative' }}>
+          <span
+            style={{
+              position: 'absolute',
+              left: '1rem',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              fontSize: '1.1rem',
+              opacity: 0.7,
+              pointerEvents: 'none'
+            }}
+          >
+            🔍
+          </span>
           <input
             type="text"
             placeholder="Pesquisar notícias..."
@@ -57,13 +70,15 @@ export const Noticias: React.FC = () => {
             onChange={handleSearchChange}
             style={{
               width: '100%',
-              padding: '0.75rem 1rem',
-              borderRadius: '8px',
+              padding: '0.85rem 1rem 0.85rem 2.8rem',
+              borderRadius: '12px',
               border: `1px solid ${colors.cardBorder}`,
               backgroundColor: colors.cardBg,
               color: colors.text,
               fontSize: '0.95rem',
-              outline: 'none'
+              outline: 'none',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+              transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
             }}
           />
         </div>
