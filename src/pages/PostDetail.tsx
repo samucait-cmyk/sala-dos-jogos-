@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { MainLayout } from '../components/siteLayout/MainLayout';
 import { usePosts } from '../context/PostContext';
 import { useTheme } from '../context/ThemeContext';
@@ -14,7 +14,6 @@ import { ShareBar } from '../components/postDetail/ShareBar';
 
 export const PostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const location = useLocation();
   const { getPostById } = usePosts();
   const { colors } = useTheme();
 
@@ -23,9 +22,6 @@ export const PostDetail: React.FC = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [id]);
-
-  const searchParams = new URLSearchParams(location.search);
-  const isFromReviews = searchParams.get('from') === 'reviews' || post?.category?.toLowerCase() === 'análise' || post?.category?.toLowerCase() === 'review';
 
   const [comments, setComments] = useState<CommentItem[]>([]);
 
