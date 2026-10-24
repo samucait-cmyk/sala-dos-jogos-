@@ -18,7 +18,7 @@ export const NewsTicker: React.FC = () => {
       style={{
         backgroundColor: mode === 'light' ? '#ffffff' : colors.tickerBg,
         borderBottom: `1px solid ${colors.tickerBorder}`,
-        height: '40px',
+        height: '42px',
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden',
@@ -34,7 +34,7 @@ export const NewsTicker: React.FC = () => {
           backgroundColor: colors.primary,
           color: '#ffffff',
           fontWeight: 800,
-          padding: '0 1rem',
+          padding: '0 1.2rem',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
@@ -66,45 +66,63 @@ export const NewsTicker: React.FC = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '3rem',
-            animation: 'tickerAnimation 25s linear infinite',
+            gap: '5rem', // Aumentado para dar um respiro amplo entre matérias
+            animation: 'tickerAnimation 30s linear infinite',
             animationPlayState: isPaused ? 'paused' : 'running',
             paddingLeft: '100%'
           }}
         >
-          {recentPosts.map((post) => (
-            <Link
-              key={post.id}
-              to={`/post/${post.id}${post.benchmark ? '?from=reviews' : ''}`}
-              style={{
-                color: mode === 'light' ? '#334155' : colors.textSecondary,
-                textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                transition: 'color 0.2s ease',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = colors.primary)}
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = mode === 'light' ? '#334155' : colors.textSecondary)
-              }
-            >
-              <span
+          {recentPosts.map((post, index) => (
+            <React.Fragment key={post.id}>
+              <Link
+                to={`/post/${post.id}${post.benchmark ? '?from=reviews' : ''}`}
                 style={{
-                  backgroundColor: mode === 'light' ? '#f1f5f9' : '#1e293b',
-                  color: mode === 'light' ? '#0f172a' : '#cbd5e1',
-                  fontSize: '0.7rem',
-                  padding: '0.1rem 0.4rem',
-                  borderRadius: '4px',
-                  fontWeight: 600,
-                  border: mode === 'light' ? '1px solid #cbd5e1' : '1px solid #334155'
+                  color: mode === 'light' ? '#334155' : colors.textSecondary,
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.65rem',
+                  transition: 'color 0.2s ease',
+                  cursor: 'pointer'
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = colors.primary)}
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = mode === 'light' ? '#334155' : colors.textSecondary)
+                }
               >
-                {post.category}
-              </span>
-              <span style={{ fontWeight: 600 }}>{post.title}</span>
-            </Link>
+                <span
+                  style={{
+                    backgroundColor: mode === 'light' ? '#f1f5f9' : '#1e293b',
+                    color: mode === 'light' ? '#0f172a' : '#cbd5e1',
+                    fontSize: '0.7rem',
+                    padding: '0.15rem 0.5rem',
+                    borderRadius: '4px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.3px',
+                    border: mode === 'light' ? '1px solid #cbd5e1' : '1px solid #334155'
+                  }}
+                >
+                  {post.category}
+                </span>
+                <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>{post.title}</span>
+              </Link>
+
+              {/* Separador Visual entre Itens */}
+              {index < recentPosts.length - 1 && (
+                <span
+                  style={{
+                    color: colors.primary,
+                    opacity: 0.6,
+                    fontSize: '0.8rem',
+                    fontWeight: 'bold',
+                    margin: '0 -2rem'
+                  }}
+                >
+                  •
+                </span>
+              )}
+            </React.Fragment>
           ))}
         </div>
       </div>
