@@ -15,15 +15,15 @@ export const RelatedPosts: React.FC<RelatedPostsProps> = ({ currentPostId, categ
   // 1. Filtra matérias excluindo ESTRITAMENTE a matéria atual
   const otherPosts = posts.filter((p) => String(p.id) !== String(currentPostId));
 
-  // 2. Filtra RIGOROSAMENTE apenas matérias da mesma categoria (sem fallback cruzado)
+  // 2. Filtra RIGOROSAMENTE apenas matérias da mesma categoria
   const related = otherPosts.filter(
     (p) => (p.category || '').toLowerCase().trim() === (category || '').toLowerCase().trim()
   );
 
-  // 3. Seleciona no máximo 3 matérias recomendadas da mesma categoria
-  const finalRelated = related.slice(0, 3);
+  // 3. Seleciona até 4 matérias recomendadas da mesma categoria para preencher o grid perfeitamente
+  const finalRelated = related.slice(0, 4);
 
-  // Se não houver matérias da mesma categoria, oculta a seção por completo (nada de misturar)
+  // Se não houver matérias da mesma categoria, oculta a seção
   if (finalRelated.length === 0) return null;
 
   const handleCardClick = () => {
@@ -70,7 +70,7 @@ export const RelatedPosts: React.FC<RelatedPostsProps> = ({ currentPostId, categ
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
           gap: '1.75rem'
         }}
       >
