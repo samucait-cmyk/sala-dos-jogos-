@@ -20,6 +20,10 @@ export const Footer: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [navigate]);
 
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
   return (
     <footer style={{
       backgroundColor: '#0b1120',
@@ -32,12 +36,12 @@ export const Footer: React.FC = () => {
         
         {/* Navegação Principal + Páginas Institucionais (AdSense Ready) */}
         <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '2rem', fontSize: '0.9rem' }}>
-          <Link to="/" style={{ color: '#94a3b8', textDecoration: 'none' }}>Início</Link>
-          <Link to="/noticias" style={{ color: '#94a3b8', textDecoration: 'none' }}>Notícias</Link>
-          <Link to="/reviews" style={{ color: '#94a3b8', textDecoration: 'none' }}>Reviews</Link>
-          <Link to="/guias" style={{ color: '#94a3b8', textDecoration: 'none' }}>Guias</Link>
-          <Link to="/sobre" style={{ color: '#94a3b8', textDecoration: 'none' }}>Sobre</Link>
-          <Link to="/politica-de-privacidade" style={{ color: '#94a3b8', textDecoration: 'none' }}>Política de Privacidade</Link>
+          <Link to="/" onClick={handleScrollTop} style={{ color: '#94a3b8', textDecoration: 'none' }}>Início</Link>
+          <Link to="/noticias" onClick={handleScrollTop} style={{ color: '#94a3b8', textDecoration: 'none' }}>Notícias</Link>
+          <Link to="/reviews" onClick={handleScrollTop} style={{ color: '#94a3b8', textDecoration: 'none' }}>Reviews</Link>
+          <Link to="/guias" onClick={handleScrollTop} style={{ color: '#94a3b8', textDecoration: 'none' }}>Guias</Link>
+          <Link to="/sobre" onClick={handleScrollTop} style={{ color: '#94a3b8', textDecoration: 'none' }}>Sobre</Link>
+          <Link to="/politica-de-privacidade" onClick={handleScrollTop} style={{ color: '#94a3b8', textDecoration: 'none' }}>Política de Privacidade</Link>
         </div>
 
         {/* E-mail de Contato Oficial */}
@@ -58,6 +62,7 @@ export const Footer: React.FC = () => {
           {/* Link Discreto de Acesso Restrito no Rodapé */}
           <Link
             to="/admin/login"
+            onClick={handleScrollTop}
             style={{
               color: '#334155',
               textDecoration: 'none',
