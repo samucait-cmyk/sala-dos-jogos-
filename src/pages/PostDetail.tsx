@@ -9,7 +9,6 @@ import { NexusPulse } from '../components/common/NexusPulse';
 
 // Componentes modulares
 import { PostHeader } from '../components/postDetail/PostHeader';
-import { PerformanceSimulator } from '../components/postDetail/PerformanceSimulator';
 import { CommentsSection, type CommentItem } from '../components/postDetail/CommentsSection';
 import { ShareBar } from '../components/postDetail/ShareBar';
 
@@ -333,10 +332,6 @@ export const PostDetail: React.FC = () => {
           </section>
         )}
 
-        {isFromReviews && (
-          <PerformanceSimulator postTitle={post.title} benchmarkFps1440p={post.benchmark?.fps1440p} />
-        )}
-
         <NexusPulse postId={post.id} />
 
         <ShareBar title={post.title} />
@@ -373,3 +368,5 @@ export const PostDetail: React.FC = () => {
     </MainLayout>
   );
 };
+
+export default PostDetail;
