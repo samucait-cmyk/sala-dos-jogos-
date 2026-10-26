@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { MainLayout } from '../components/siteLayout/MainLayout';
 import { usePosts } from '../context/PostContext';
 import { useTheme } from '../context/ThemeContext';
@@ -167,6 +168,10 @@ export const PostDetail: React.FC = () => {
   if (!post) {
     return (
       <MainLayout>
+        <Helmet>
+          <title>Matéria não encontrada | Sala dos Jogos</title>
+          <meta name="robots" content="noindex" />
+        </Helmet>
         <div style={{ textAlign: 'center', padding: '5rem 1rem' }}>
           <h1 style={{ fontSize: '2rem', marginBottom: '1rem', color: colors.text }}>
             Matéria não encontrada
@@ -279,6 +284,25 @@ export const PostDetail: React.FC = () => {
 
   return (
     <MainLayout>
+      {/* SEO e Open Graph Dinâmicos com Helmet */}
+      <Helmet>
+        <title>{`${post.title} | Sala dos Jogos`}</title>
+        <meta name="description" content={post.summary} />
+
+        {/* Open Graph (Facebook, WhatsApp, Discord, LinkedIn) */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={post.summary} />
+        {post.imageUrl && <meta property="og:image" content={post.imageUrl} />}
+        <meta property="og:site_name" content="Sala dos Jogos" />
+
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.summary} />
+        {post.imageUrl && <meta name="twitter:image" content={post.imageUrl} />}
+      </Helmet>
+
       <article style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem 1rem 5rem 1rem' }}>
 
         <PostHeader
