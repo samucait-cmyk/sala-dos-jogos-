@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { usePosts } from '../../context/PostContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -20,7 +20,14 @@ export const FeaturedHero: React.FC = () => {
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
-  const featuredPosts = posts.slice(0, 5);
+  const safePosts = posts || [];
+
+  // Seleção aleatória inteligente e dinâmica para o carrossel (executada apenas ao carregar/atualizar a página)
+  const featuredPosts = useMemo(() => {
+    if (!safePosts.length) return [];
+    return [...safePosts].sort(() => Math.random() - 0.5).slice(0, 5);
+  }, [posts]);
+
   const DURATION = 6000;
   const INTERVAL_STEP = 50;
 
@@ -275,7 +282,7 @@ export const FeaturedHero: React.FC = () => {
           </div>
         </Link>
 
-        {/* Setas de Navegação Laterais: Padrão Glassmorphism | Hover com a Cor do Tema */}
+        {/* Setas de Navegação Laterais */}
         {featuredPosts.length > 1 && (
           <>
             {/* Seta Esquerda (Anterior) */}
