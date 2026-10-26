@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Página Inicial -->
+  <url>
+    <loc>https://sala-dos-jogos.vercel.app/</loc>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+  </url>
+
+  <!-- Categorias Principais -->
+  <url>
+    <loc>https://sala-dos-jogos.vercel.app/noticias</loc>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://sala-dos-jogos.vercel.app/reviews</loc>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://sala-dos-jogos.vercel.app/analises</loc>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://sala-dos-jogos.vercel.app/guias</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <!-- Páginas Institucionais -->
+  <url>
+    <loc>https://sala-dos-jogos.vercel.app/sobre</loc>
+    <priority>0.5</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://sala-dos-jogos.vercel.app/politica-de-privacidade</loc>
+    <priority>0.5</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+</urlset>
