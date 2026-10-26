@@ -108,8 +108,6 @@ export const FeaturedHero: React.FC = () => {
     currentPost.category.toLowerCase().includes('analise') ||
     !!currentPost.benchmark;
 
-  const displayAuthor = (!currentPost.author || currentPost.author.includes('Nexus')) ? 'Redação Sala dos Jogos' : currentPost.author;
-
   return (
     <div
       className="hero-wrapper"
@@ -254,13 +252,8 @@ export const FeaturedHero: React.FC = () => {
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', paddingTop: '1.25rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: '#cbd5e1', fontSize: '0.875rem' }}>
-                <span>Por <strong style={{ color: '#ffffff' }}>{displayAuthor}</strong></span>
-                <span>•</span>
-                <span>{currentPost.date}</span>
-              </div>
-
+            {/* Rodapé do Card com o Botão alinhado à direita */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap', gap: '1rem', paddingTop: '1.25rem' }}>
               <div
                 style={{
                   backgroundColor: colors.primary,
