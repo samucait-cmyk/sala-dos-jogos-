@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { MainLayout } from '../components/siteLayout/MainLayout';
 import { usePosts } from '../context/PostContext';
 import { useTheme } from '../context/ThemeContext';
-import { getYouTubeEmbedUrl } from '../utils/formatters';
+import { getYouTubeEmbedUrl, createSlug } from '../utils/formatters';
 import { RelatedPosts } from '../components/common/RelatedPosts';
 import { NexusPulse } from '../components/common/NexusPulse';
 import SEO from '../components/common/SEO';
@@ -283,7 +283,10 @@ export const PostDetail: React.FC = () => {
   };
 
   const backTarget = getCategoryBackTarget(post.category);
-  const postUrl = `https://sala-dos-jogos.vercel.app/post/${post.id}`;
+  
+  // URL Profissional gerada automaticamente através do título
+  const postSlug = createSlug(post.title);
+  const postUrl = `https://sala-dos-jogos.vercel.app/post/${postSlug}`;
 
   return (
     <MainLayout>

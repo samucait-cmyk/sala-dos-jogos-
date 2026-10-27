@@ -25,3 +25,18 @@ export function getYouTubeEmbedUrl(url?: string): string | null {
 
   return url; // Retorna original se não corresponder
 }
+
+/**
+ * Converte um título de artigo em um slug limpo para URLs amigáveis de SEO.
+ * Exemplo: "Final Fantasy Resonance!" -> "final-fantasy-resonance"
+ */
+export function createSlug(title: string): string {
+  if (!title) return '';
+  return title
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+    .replace(/[^\w\s-]/g, '') // Remove caracteres especiais
+    .trim()
+    .replace(/\s+/g, '-'); // Substitui espaços por hífens
+}
