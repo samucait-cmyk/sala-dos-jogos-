@@ -3,7 +3,7 @@ import { useTheme } from '../../context/ThemeContext';
 
 interface Props {
   title: string;
-  url?: string; // Adicionado suporte a URL customizada/slug
+  url?: string; // Suporte a URL customizada/slug
 }
 
 export const ShareBar: React.FC<Props> = ({ title, url }) => {
@@ -17,7 +17,7 @@ export const ShareBar: React.FC<Props> = ({ title, url }) => {
   const encodedUrl = encodeURIComponent(targetUrl);
 
   const shareButtons = [
-    { id: 'whatsapp', label: 'WhatsApp', color: '#25D366', url: `https://api.whatsapp.com/send?text=${shareTitle}%20${encodedUrl}` },
+    { id: 'whatsapp', label: 'WhatsApp', color: '#25D366', url: `https://api.whatsapp.com/send?text=${encodedUrl}` },
     { id: 'telegram', label: 'Telegram', color: '#229ED9', url: `https://t.me/share/url?url=${encodedUrl}&text=${shareTitle}` },
     { id: 'twitter', label: '𝕏 Twitter', color: '#000000', url: `https://twitter.com/intent/tweet?text=${shareTitle}&url=${encodedUrl}` },
     { id: 'reddit', label: 'Reddit', color: '#FF4500', url: `https://www.reddit.com/submit?url=${encodedUrl}&title=${shareTitle}` }
