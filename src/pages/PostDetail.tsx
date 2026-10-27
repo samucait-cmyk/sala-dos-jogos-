@@ -7,6 +7,8 @@ import { useTheme } from '../context/ThemeContext';
 import { getYouTubeEmbedUrl } from '../utils/formatters';
 import { RelatedPosts } from '../components/common/RelatedPosts';
 import { NexusPulse } from '../components/common/NexusPulse';
+import SEO from '../components/common/SEO';
+import SchemaOrg from '../components/common/SchemaOrg';
 
 // Componentes modulares
 import { PostHeader } from '../components/postDetail/PostHeader';
@@ -281,27 +283,26 @@ export const PostDetail: React.FC = () => {
   };
 
   const backTarget = getCategoryBackTarget(post.category);
+  const postUrl = `https://sala-dos-jogos.vercel.app/post/${post.id}`;
 
   return (
     <MainLayout>
-      {/* SEO e Open Graph Dinâmicos com Helmet */}
-      <Helmet>
-        <title>{`${post.title} | Sala dos Jogos`}</title>
-        <meta name="description" content={post.summary} />
-
-        {/* Open Graph (Facebook, WhatsApp, Discord, LinkedIn) */}
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content={post.title} />
-        <meta property="og:description" content={post.summary} />
-        {post.imageUrl && <meta property="og:image" content={post.imageUrl} />}
-        <meta property="og:site_name" content="Sala dos Jogos" />
-
-        {/* Twitter Cards */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={post.title} />
-        <meta name="twitter:description" content={post.summary} />
-        {post.imageUrl && <meta name="twitter:image" content={post.imageUrl} />}
-      </Helmet>
+      {/* Automação Completa de SEO e Schema.org para o Google Discover */}
+      <SEO 
+        title={post.title}
+        description={post.summary}
+        url={postUrl}
+        image={post.imageUrl}
+      />
+      
+      <SchemaOrg 
+        title={post.title}
+        description={post.summary}
+        url={postUrl}
+        image={post.imageUrl || ''}
+        datePublished={post.date || new Date().toISOString()}
+        authorName={displayAuthor}
+      />
 
       <article style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem 1rem 5rem 1rem' }}>
 
