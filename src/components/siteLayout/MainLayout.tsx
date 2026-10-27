@@ -3,6 +3,7 @@ import { Header } from './Header';
 import { Footer } from './Footer';
 import { NewsTicker } from '../common/NewsTicker';
 import { useTheme } from '../../context/ThemeContext';
+import SEO from '../common/SEO';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -25,6 +26,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         transition: 'background-color 0.3s ease, color 0.3s ease'
       }}
     >
+      {/* Componente SEO base integrado para o portal */}
+      <SEO />
+
       <Header />
       <NewsTicker />
       <main
