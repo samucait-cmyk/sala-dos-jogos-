@@ -358,7 +358,8 @@ export const PostDetail: React.FC = () => {
 
         <NexusPulse postId={post.id} />
 
-        <ShareBar title={post.title} />
+        {/* Passa a URL com slug limpo para o ShareBar */}
+        <ShareBar title={post.title} url={postUrl} />
 
         <CommentsSection
           comments={comments}

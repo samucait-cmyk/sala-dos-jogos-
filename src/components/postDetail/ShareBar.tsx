@@ -3,25 +3,28 @@ import { useTheme } from '../../context/ThemeContext';
 
 interface Props {
   title: string;
+  url?: string; // Adicionado suporte a URL customizada/slug
 }
 
-export const ShareBar: React.FC<Props> = ({ title }) => {
+export const ShareBar: React.FC<Props> = ({ title, url }) => {
   const { colors } = useTheme();
   const [copyFeedback, setCopyFeedback] = useState(false);
   const [hoveredShare, setHoveredShare] = useState<string | null>(null);
 
   const shareTitle = encodeURIComponent(title);
-  const currentUrl = encodeURIComponent(window.location.href);
+  // Usa a URL com slug passada por propriedade ou a atual do navegador como fallback
+  const targetUrl = url || window.location.href;
+  const encodedUrl = encodeURIComponent(targetUrl);
 
   const shareButtons = [
-    { id: 'whatsapp', label: 'WhatsApp', color: '#25D366', url: `https://api.whatsapp.com/send?text=${shareTitle}%20${currentUrl}` },
-    { id: 'telegram', label: 'Telegram', color: '#229ED9', url: `https://t.me/share/url?url=${currentUrl}&text=${shareTitle}` },
-    { id: 'twitter', label: '𝕏 Twitter', color: '#000000', url: `https://twitter.com/intent/tweet?text=${shareTitle}&url=${currentUrl}` },
-    { id: 'reddit', label: 'Reddit', color: '#FF4500', url: `https://www.reddit.com/submit?url=${currentUrl}&title=${shareTitle}` }
+    { id: 'whatsapp', label: 'WhatsApp', color: '#25D366', url: `https://api.whatsapp.com/send?text=${shareTitle}%20${encodedUrl}` },
+    { id: 'telegram', label: 'Telegram', color: '#229ED9', url: `https://t.me/share/url?url=${encodedUrl}&text=${shareTitle}` },
+    { id: 'twitter', label: '𝕏 Twitter', color: '#000000', url: `https://twitter.com/intent/tweet?text=${shareTitle}&url=${encodedUrl}` },
+    { id: 'reddit', label: 'Reddit', color: '#FF4500', url: `https://www.reddit.com/submit?url=${encodedUrl}&title=${shareTitle}` }
   ];
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(targetUrl);
     setCopyFeedback(true);
     setTimeout(() => setCopyFeedback(false), 2000);
   };
@@ -91,3 +94,5 @@ export const ShareBar: React.FC<Props> = ({ title }) => {
     </div>
   );
 };
+
+export default ShareBar;
