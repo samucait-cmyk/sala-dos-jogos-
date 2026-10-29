@@ -3,7 +3,7 @@ import { useTheme } from '../../context/ThemeContext';
 
 interface Props {
   title: string;
-  url?: string; // Suporte a URL customizada/slug
+  url?: string;
 }
 
 export const ShareBar: React.FC<Props> = ({ title, url }) => {
@@ -12,7 +12,6 @@ export const ShareBar: React.FC<Props> = ({ title, url }) => {
   const [hoveredShare, setHoveredShare] = useState<string | null>(null);
 
   const shareTitle = encodeURIComponent(title);
-  // Usa a URL com slug passada por propriedade ou a atual do navegador como fallback
   const targetUrl = url || window.location.href;
   const encodedUrl = encodeURIComponent(targetUrl);
 
